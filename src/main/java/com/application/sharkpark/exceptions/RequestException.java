@@ -22,4 +22,13 @@ public class RequestException extends RuntimeException {
         return new RequestException(
                 "The number on the field " + field + " must be greater than 0.");
     }
+
+    public static RequestException oneOfTheTwoFieldsMustBeFilledIn  (String fieldOne, String fieldTwo) {
+        return new RequestException(
+                "One of the fields: " + fieldOne + " and " + fieldTwo + " must be filled in.");
+    }
+
+    public static RequestException existingEmail(){
+        return new RequestException("This email is already linked to a account.");
+    }
 }

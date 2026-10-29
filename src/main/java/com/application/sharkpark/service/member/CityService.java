@@ -2,7 +2,9 @@ package com.application.sharkpark.service.member;
 
 import com.application.sharkpark.domain.member.City;
 import com.application.sharkpark.repository.member.CityRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,12 +26,12 @@ public class CityService {
 
     public City findById(Integer cityId) {
         return cityRepository.findById(cityId)
-                             .orElseThrow(() -> new RuntimeException("City not found"));
+                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "City not found"));
     }
 
     public City findByPostalCode(Integer postalCode) {
         return cityRepository.findByPostalCode(postalCode)
-                             .orElseThrow(() -> new RuntimeException("City not found"));
+                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "City not found"));
     }
 
     public boolean existsById(Integer cityId) {

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 
@@ -55,11 +55,11 @@ public class User {
     public User() {
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -160,10 +160,10 @@ public class User {
     }
 
     public boolean canHaveAccessTo(Feature feature) {
-        return role.containsFeature(feature);
+        return role != null && role.containsFeature(feature);
     }
 
     public boolean doesPasswordMatch(String password) {
-        return this.password.equals(password);
+        return this.password != null && this.password.equals(password);
     }
 }
