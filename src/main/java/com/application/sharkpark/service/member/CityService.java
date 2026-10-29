@@ -15,15 +15,15 @@ public class CityService {
     }
 
     public City save(City newCity) {
-        return cityRepository.saveCity(newCity);
+        return cityRepository.save(newCity);
     }
 
-    public List<City> findAll(){
-        return cityRepository.findAllCity();
+    public List<City> findAll() {
+        return cityRepository.findAll();
     }
 
     public City findById(Integer cityId) {
-        return cityRepository.findByCityId(cityId)
+        return cityRepository.findById(cityId)
                              .orElseThrow(() -> new RuntimeException("City not found"));
     }
 
@@ -33,7 +33,6 @@ public class CityService {
     }
 
     public boolean existsById(Integer cityId) {
-        return cityRepository.existsByCityId(cityId);
+        return cityRepository.existsById(cityId);
     }
-
 }

@@ -1,21 +1,11 @@
 package com.application.sharkpark.repository.member;
 
 import com.application.sharkpark.domain.member.City;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.ListCrudRepository;
 
-import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface CityRepository extends CrudRepository<City, Integer> {
-    City saveCity(City newCity);
-
-    Optional<City> findByCityId(Integer id);
+public interface CityRepository extends ListCrudRepository<City, Integer> {
 
     Optional<City> findByPostalCode(Integer postalCode);
-
-    List<City> findAllCity();
-
-    boolean existsByCityId(Integer cityId);
 }

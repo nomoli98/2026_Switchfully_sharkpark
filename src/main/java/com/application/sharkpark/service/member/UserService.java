@@ -24,16 +24,15 @@ public class UserService {
         UserRequestValidator.validateNewUser(request);
         City city = cityService.findByPostalCode(request.postalCode());
         User user = UserMapper.toEntity(request, city);
-        return userRepository.saveUser(user);
-
+        return userRepository.save(user);
     }
 
     public List<User> findAll() {
-        return userRepository.findAllUsers();
+        return userRepository.findAll();
     }
 
     public User findById(Integer userId) {
-        return userRepository.findByUserId(userId)
+        return userRepository.findById(userId)
                              .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
@@ -43,6 +42,6 @@ public class UserService {
     }
 
     public boolean existsById(Integer userId) {
-        return userRepository.existsByUserId(userId);
+        return userRepository.existsById(userId);
     }
 }
