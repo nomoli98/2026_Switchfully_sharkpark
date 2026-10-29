@@ -16,11 +16,14 @@ public class ParkingLotService {
 
     private final Logger logger = LoggerFactory.getLogger(ParkingLotService.class);
 
-    @Autowired
-    private ParkingLotRepository parkingLotRepository;
+    private final ParkingLotRepository parkingLotRepository;
 
-    @Autowired
-    private ParkingLotMapper parkingLotMapper;
+    private final ParkingLotMapper parkingLotMapper;
+
+    public ParkingLotService(ParkingLotRepository parkingLotRepository, ParkingLotMapper parkingLotMapper) {
+        this.parkingLotRepository = parkingLotRepository;
+        this.parkingLotMapper = parkingLotMapper;
+    }
 
     public ParkingLotResponse createParkingLot(ParkingLotRequest parkingLotRequest) {
         ParkingLot parkingLot = parkingLotMapper.mapToParkingLot(parkingLotRequest);

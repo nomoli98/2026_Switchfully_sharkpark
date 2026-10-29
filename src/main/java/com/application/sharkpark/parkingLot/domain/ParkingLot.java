@@ -1,5 +1,7 @@
 package com.application.sharkpark.parkingLot.domain;
 
+import com.application.sharkpark.domain.member.City;
+import com.application.sharkpark.domain.member.User;
 import com.application.sharkpark.parkingLot.enums.ParkingLotCategory;
 import jakarta.persistence.*;
 
@@ -29,18 +31,27 @@ public class ParkingLot {
     @Column(name = "price_per_hour")
     private double pricePerHour;
 
-    // add person and city
-//    @ManyToOne
-//    @JoinColumn(name = "fk_contact_person_id")
-//    private User contactPerson;
 
-    public ParkingLot(String name, ParkingLotCategory category, Integer maxCapacity, String addressStreet, Integer addressNumber, double pricePerHour) {
+    @ManyToOne
+    @JoinColumn(name = "fk_contact_person_id")
+    private User contactPerson;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_city_id")
+    private City city;
+
+    public ParkingLot(String name, ParkingLotCategory category, Integer maxCapacity,
+                      String addressStreet, Integer addressNumber, double pricePerHour,
+                      User contactPerson, City city) {
         this.name = name;
         this.category = category;
         this.maxCapacity = maxCapacity;
         this.addressStreet = addressStreet;
         this.addressNumber = addressNumber;
         this.pricePerHour = pricePerHour;
+        this.contactPerson = contactPerson;
+        this.city = city;
+
     }
 
     public ParkingLot() {
@@ -75,20 +86,20 @@ public class ParkingLot {
         return addressStreet;
     }
 
-    public void setAddressStreet(String addressStreet) {
-        this.addressStreet = addressStreet;
-    }
-
     public Integer getAddressNumber() {
         return addressNumber;
     }
 
-    public void setAddressNumber(Integer addressNumber) {
-        this.addressNumber = addressNumber;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public User getContactPerson() {
+        return contactPerson;
     }
 
     public void setName(String name) {
@@ -99,7 +110,4 @@ public class ParkingLot {
         return pricePerHour;
     }
 
-    public void setPricePerHour(double pricePerHour) {
-        this.pricePerHour = pricePerHour;
-    }
 }
