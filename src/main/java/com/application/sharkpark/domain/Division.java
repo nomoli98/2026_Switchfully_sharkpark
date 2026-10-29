@@ -1,5 +1,6 @@
 package com.application.sharkpark.domain;
 
+import com.application.sharkpark.domain.member.User;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,23 +12,24 @@ public class Division {
     @SequenceGenerator(name = "divisions_division_id_seq", sequenceName = "divisions_division_id_seq", allocationSize = 1)
     private int divisionId;
 
-    @Column(name = "NAME", nullable = false, length = 50)
+    @Column(name = "NAME", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "ORIGINAL_NAME",  nullable = false, length = 50)
+    @Column(name = "ORIGINAL_NAME",  nullable = false, length = 100)
     private String originalName;
 
-    @Column(name = "FK_DIRECTOR_ID")
-    private Integer directorId;
+    @ManyToOne
+    @JoinColumn(name = "FK_DIRECTOR_ID", referencedColumnName = "user_id")
+    private User director;
 
-    public Division(String name, String originalName, Integer directorId) {
+    public Division(String name, String originalName, User director) {
         this.name = name;
         this.originalName = originalName;
-        this.directorId = directorId;
+        this.director = director;
 
     }
 
-    public Division() {
+    protected Division() {
 
     }
 
@@ -42,9 +44,8 @@ public class Division {
     public String getOriginalName() {
         return originalName;
     }
-    public Integer getDirectorId() {
-        return directorId;
+
+    public User getDirector() {
+        return director;
     }
-
-
 }
