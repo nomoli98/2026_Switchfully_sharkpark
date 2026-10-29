@@ -4,6 +4,7 @@ import com.application.sharkpark.domain.member.City;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -12,9 +13,9 @@ public interface CityRepository extends CrudRepository<City, Integer> {
 
     Optional<City> findByCityId(Integer id);
 
-    Optional<City> findByName(String name);
+    Optional<City> findByPostalCode(Integer postalCode);
 
-    City findAllCity();
+    List<City> findAllCity();
 
     boolean existsByCityId(Integer cityId);
 }
