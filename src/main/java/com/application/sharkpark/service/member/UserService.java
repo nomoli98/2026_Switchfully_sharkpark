@@ -3,6 +3,7 @@ package com.application.sharkpark.service.member;
 import com.application.sharkpark.domain.member.City;
 import com.application.sharkpark.domain.member.User;
 import com.application.sharkpark.dto.request.member.CreateUserRequest;
+import com.application.sharkpark.dto.request.member.RegisterMemberRequest;
 import com.application.sharkpark.mapper.UserMapper;
 import com.application.sharkpark.repository.member.UserRepository;
 import com.application.sharkpark.validator.UserRequestValidator;
@@ -25,6 +26,10 @@ public class UserService {
         City city = cityService.findByPostalCode(request.postalCode());
         User user = UserMapper.toEntity(request, city);
         return userRepository.save(user);
+    }
+
+    public User register(RegisterMemberRequest request){
+        return this.save(UserMapper.toCreateUserRequest(request));
     }
 
     public List<User> findAll() {
