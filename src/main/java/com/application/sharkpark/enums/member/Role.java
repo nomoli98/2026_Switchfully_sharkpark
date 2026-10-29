@@ -1,7 +1,21 @@
 package com.application.sharkpark.enums.member;
 
+import com.application.sharkpark.enums.Feature;
+
+import java.util.List;
+
 public enum Role {
-    ADMIN,
-    MANAGER,
-    MEMBER
+    ADMIN(List.of(Feature.CREATE_MEMBER, Feature.CREATE_DIVISION, Feature.CREATE_PARKING_LOT)),
+    MANAGER(List.of(Feature.CREATE_DIVISION, Feature.CREATE_PARKING_LOT)),
+    MEMBER(List.of(Feature.CREATE_MEMBER));
+
+    private final List<Feature> features;
+
+    Role(List<Feature> features) {
+        this.features = features;
+    }
+
+    public boolean containsFeature(Feature feature) {
+        return features.contains(feature);
+    }
 }
