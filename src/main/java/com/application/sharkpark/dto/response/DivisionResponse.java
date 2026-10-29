@@ -1,9 +1,9 @@
 package com.application.sharkpark.dto.response;
 
-public record CreateDivisionResponse(
+public record DivisionResponse(
         Integer divisionId,
         String name,
         String originalName,
-        Integer director_id
+        String directorName
 ) {
 }

@@ -1,41 +1,44 @@
 package com.application.sharkpark.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(RequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleRequestException(RequestException exception) {
-        return exception.getMessage();
+    public ResponseEntity<Map<String, String>> handleRequestException(RequestException exception) {
+        logger.warn("Bad request: {}", exception.getMessage());
+        return response(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public String handleUnauthorizedException(UnauthorizedException exception) {
-        return exception.getMessage();
+    public ResponseEntity<Map<String, String>> handleUnauthorized(UnauthorizedException exception) {
+        logger.warn("Unauthorized access: {}", exception.getMessage());
+        return response(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }
 
     @ExceptionHandler(ForbiddenException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public String handleForbiddenException(ForbiddenException exception) {
-        return exception.getMessage();
+    public ResponseEntity<Map<String, String>> handleForbidden(ForbiddenException exception) {
+        logger.warn("Forbidden access: {}", exception.getMessage());
+        return response(HttpStatus.FORBIDDEN, exception.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleValidationException(
-            MethodArgumentNotValidException exception) {
-
-        return exception.getBindingResult()
-                .getFieldErrors()
-                .get(0)
-                .getDefaultMessage();
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNotFound(NotFoundException exception) {
+        logger.warn("Resource not found: {}", exception.getMessage());
+        return response(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
+
+    private ResponseEntity<Map<String, String>> response(HttpStatus status, String message) {
+        return ResponseEntity.status(status).body(Map.of("message", message));
+    }
 }
