@@ -1,10 +1,10 @@
 package com.application.sharkpark.controller.member;
 
-import com.application.sharkpark.domain.member.City;
-import com.application.sharkpark.domain.member.User;
-import com.application.sharkpark.enums.member.Role;
-import com.application.sharkpark.repository.member.CityRepository;
-import com.application.sharkpark.repository.member.UserRepository;
+import com.application.sharkpark.domain.City;
+import com.application.sharkpark.domain.User;
+import com.application.sharkpark.enums.Role;
+import com.application.sharkpark.repository.CityRepository;
+import com.application.sharkpark.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.config.JsonConfig;
 import io.restassured.config.RestAssuredConfig;

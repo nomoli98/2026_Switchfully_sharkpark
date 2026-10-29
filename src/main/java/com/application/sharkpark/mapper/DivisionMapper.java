@@ -1,9 +1,8 @@
 package com.application.sharkpark.mapper;
 
 import com.application.sharkpark.domain.Division;
-import com.application.sharkpark.domain.member.User;
+import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.CreateDivisionRequest;
-import com.application.sharkpark.dto.request.member.CreateUserRequest;
 import com.application.sharkpark.dto.response.DivisionResponse;
 
 public class DivisionMapper {

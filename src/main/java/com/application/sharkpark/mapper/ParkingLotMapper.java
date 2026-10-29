@@ -1,15 +1,13 @@
-package com.application.sharkpark.parkingLot.mapper;
+package com.application.sharkpark.mapper;
 
-import com.application.sharkpark.domain.member.City;
-import com.application.sharkpark.domain.member.User;
-import com.application.sharkpark.dto.response.member.CityResponse;
-import com.application.sharkpark.dto.response.member.UserResponse;
-import com.application.sharkpark.mapper.member.UserMapper;
-import com.application.sharkpark.parkingLot.domain.ParkingLot;
-import com.application.sharkpark.parkingLot.dto.request.ParkingLotRequest;
-import com.application.sharkpark.parkingLot.dto.response.ParkingLotResponse;
-import com.application.sharkpark.repository.member.CityRepository;
-import com.application.sharkpark.repository.member.UserRepository;
+import com.application.sharkpark.domain.City;
+import com.application.sharkpark.domain.User;
+import com.application.sharkpark.dto.response.CityResponse;
+import com.application.sharkpark.domain.ParkingLot;
+import com.application.sharkpark.dto.request.ParkingLotRequest;
+import com.application.sharkpark.dto.response.ParkingLotResponse;
+import com.application.sharkpark.repository.CityRepository;
+import com.application.sharkpark.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

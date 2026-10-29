@@ -1,7 +1,7 @@
-package com.application.sharkpark.domain.member;
+package com.application.sharkpark.domain;
 
 import com.application.sharkpark.enums.Feature;
-import com.application.sharkpark.enums.member.Role;
+import com.application.sharkpark.enums.Role;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

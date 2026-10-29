@@ -1,6 +1,6 @@
-package com.application.sharkpark.repository.member;
+package com.application.sharkpark.repository;
 
-import com.application.sharkpark.domain.member.User;
+import com.application.sharkpark.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

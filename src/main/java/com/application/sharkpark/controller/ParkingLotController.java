@@ -1,9 +1,9 @@
-package com.application.sharkpark.parkingLot.controller;
+package com.application.sharkpark.controller;
 
 import com.application.sharkpark.enums.Feature;
-import com.application.sharkpark.parkingLot.dto.request.ParkingLotRequest;
-import com.application.sharkpark.parkingLot.dto.response.ParkingLotResponse;
-import com.application.sharkpark.parkingLot.service.ParkingLotService;
+import com.application.sharkpark.dto.request.ParkingLotRequest;
+import com.application.sharkpark.dto.response.ParkingLotResponse;
+import com.application.sharkpark.service.ParkingLotService;
 import com.application.sharkpark.service.SecurityService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

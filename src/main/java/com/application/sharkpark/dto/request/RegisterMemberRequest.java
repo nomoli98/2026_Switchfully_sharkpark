@@ -1,6 +1,6 @@
-package com.application.sharkpark.dto.request.member;
+package com.application.sharkpark.dto.request;
 
-import com.application.sharkpark.enums.member.Role;
+import com.application.sharkpark.enums.Role;
 
 import java.time.LocalDate;
 

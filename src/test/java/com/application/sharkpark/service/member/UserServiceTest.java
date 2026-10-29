@@ -1,14 +1,16 @@
 package com.application.sharkpark.service.member;
 
-import com.application.sharkpark.domain.member.City;
-import com.application.sharkpark.domain.member.User;
-import com.application.sharkpark.dto.request.member.CreateUserRequest;
-import com.application.sharkpark.dto.request.member.RegisterMemberRequest;
-import com.application.sharkpark.dto.response.member.UserResponse;
+import com.application.sharkpark.domain.City;
+import com.application.sharkpark.domain.User;
+import com.application.sharkpark.dto.request.CreateUserRequest;
+import com.application.sharkpark.dto.request.RegisterMemberRequest;
+import com.application.sharkpark.dto.response.UserResponse;
 import com.application.sharkpark.exceptions.NotFoundException;
 import com.application.sharkpark.exceptions.RequestException;
-import com.application.sharkpark.mapper.member.UserMapper;
-import com.application.sharkpark.repository.member.UserRepository;
+import com.application.sharkpark.mapper.UserMapper;
+import com.application.sharkpark.repository.UserRepository;
+import com.application.sharkpark.service.CityService;
+import com.application.sharkpark.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

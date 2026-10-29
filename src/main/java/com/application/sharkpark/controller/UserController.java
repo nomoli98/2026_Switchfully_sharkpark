@@ -1,10 +1,10 @@
-package com.application.sharkpark.controller.member;
+package com.application.sharkpark.controller;
 
-import com.application.sharkpark.dto.request.member.CreateUserRequest;
-import com.application.sharkpark.dto.response.member.UserResponse;
+import com.application.sharkpark.dto.request.CreateUserRequest;
+import com.application.sharkpark.dto.response.UserResponse;
 import com.application.sharkpark.enums.Feature;
 import com.application.sharkpark.service.SecurityService;
-import com.application.sharkpark.service.member.UserService;
+import com.application.sharkpark.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

@@ -1,14 +1,12 @@
-package com.application.sharkpark.parkingLot.service;
+package com.application.sharkpark.service;
 
-import com.application.sharkpark.parkingLot.controller.ParkingLotController;
-import com.application.sharkpark.parkingLot.domain.ParkingLot;
-import com.application.sharkpark.parkingLot.dto.request.ParkingLotRequest;
-import com.application.sharkpark.parkingLot.dto.response.ParkingLotResponse;
-import com.application.sharkpark.parkingLot.mapper.ParkingLotMapper;
-import com.application.sharkpark.parkingLot.repository.ParkingLotRepository;
+import com.application.sharkpark.domain.ParkingLot;
+import com.application.sharkpark.dto.request.ParkingLotRequest;
+import com.application.sharkpark.dto.response.ParkingLotResponse;
+import com.application.sharkpark.mapper.ParkingLotMapper;
+import com.application.sharkpark.repository.ParkingLotRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

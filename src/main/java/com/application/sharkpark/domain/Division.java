@@ -1,6 +1,5 @@
 package com.application.sharkpark.domain;
 
-import com.application.sharkpark.domain.member.User;
 import jakarta.persistence.*;
 
 @Entity
