@@ -8,7 +8,7 @@ public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "city_id", nullable = false)
-    private Integer id;
+    private Integer cityId;
     @Column(name = "name", nullable = false, length = 50)
     private String name;
     @Column(name = "postal_code", nullable = false)
@@ -18,11 +18,11 @@ public class City {
     }
 
     public Integer getId() {
-        return id;
+        return cityId;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.cityId = id;
     }
 
     public String getName() {
