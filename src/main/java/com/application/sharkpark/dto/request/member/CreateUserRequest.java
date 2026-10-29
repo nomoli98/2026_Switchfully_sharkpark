@@ -2,6 +2,7 @@ package com.application.sharkpark.dto.request.member;
 
 import com.application.sharkpark.enums.member.Role;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record CreateUserRequest(String firstname,
                                 String lastname,
@@ -13,6 +14,6 @@ public record CreateUserRequest(String firstname,
                                 Integer addressNumber,
                                 Integer postalCode,
                                 String licensePlate,
-                                LocalDate registrationDate,
+                                LocalDateTime registrationDate,
                                 Role role) {
 }
