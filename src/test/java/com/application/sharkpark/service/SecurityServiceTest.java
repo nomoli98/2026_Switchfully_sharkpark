@@ -4,7 +4,7 @@ import com.application.sharkpark.domain.member.User;
 import com.application.sharkpark.enums.Feature;
 import com.application.sharkpark.exceptions.ForbiddenException;
 import com.application.sharkpark.exceptions.UnauthorizedException;
-import com.application.sharkpark.repository.UserRepository;
+import com.application.sharkpark.repository.member.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
