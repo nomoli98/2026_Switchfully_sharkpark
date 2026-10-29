@@ -1,5 +1,6 @@
 package com.application.sharkpark.domain.member;
 
+import com.application.sharkpark.enums.Feature;
 import com.application.sharkpark.enums.member.Role;
 import jakarta.persistence.*;
 
@@ -156,5 +157,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean canHaveAccessTo(Feature feature) {
+        return role.containsFeature(feature);
+    }
+
+    public boolean doesPasswordMatch(String password) {
+        return this.password.equals(password);
     }
 }
