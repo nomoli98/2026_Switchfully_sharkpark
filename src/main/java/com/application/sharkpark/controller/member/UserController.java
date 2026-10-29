@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class UserController {
     public UserResponse getById(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
                                 @Parameter(hidden = true) String authorization,
                                 @PathVariable("id") Integer memberId) {
-        securityService.validateAuthorization(authorization, Feature.CREATE_DIVISION);
+        securityService.validateAuthorization(authorization, Feature.VIEW_ALL_MEMBERS);
         return userService.findById(memberId);
     }
 
@@ -119,8 +120,15 @@ public class UserController {
             @Parameter(hidden = true) String authorization,
             @PathVariable("firstname") String firstname,
             @PathVariable("lastname") String lastname) {
-        securityService.validateAuthorization(authorization, Feature.CREATE_DIVISION);
+        securityService.validateAuthorization(authorization, Feature.VIEW_ALL_MEMBERS);
         return userService.findByFullName(firstname, lastname);
+    }
+
+    // "/members/by-name" without both names would otherwise hit "{id}" and fail as a bad id (400).
+    // Literal paths win over "{id}", so this returns a clean 404 instead.
+    @GetMapping({"by-name", "by-name/{firstname}"})
+    public UserResponse getByFullNameIncomplete() {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }
 
     @Operation(summary = "Register a new user")
