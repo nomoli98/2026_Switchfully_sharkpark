@@ -6,7 +6,7 @@ import com.application.sharkpark.parkingLot.enums.ParkingLotCategory;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "parking_lots", schema = "sharkpark")
+@Table(name = "parking_lots")
 public class ParkingLot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
