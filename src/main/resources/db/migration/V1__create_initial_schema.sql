@@ -10,6 +10,7 @@ CREATE TABLE users
     user_id           SERIAL PRIMARY KEY,
     firstname         VARCHAR(100) NOT NULL,
     lastname          VARCHAR(100) NOT NULL,
+    password          VARCHAR(100) NOT NULL,
     mobile_number     VARCHAR(12),
     phone_number      VARCHAR(12),
     email             VARCHAR(100) NOT NULL UNIQUE,
