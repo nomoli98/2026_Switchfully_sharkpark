@@ -31,6 +31,12 @@ public class GlobalExceptionHandler {
         return response(HttpStatus.FORBIDDEN, exception.getMessage());
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNotFound(NotFoundException exception) {
+        logger.warn("Resource not found: {}", exception.getMessage());
+        return response(HttpStatus.NOT_FOUND, exception.getMessage());
+    }
+
 
     private ResponseEntity<Map<String, String>> response(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(Map.of("message", message));

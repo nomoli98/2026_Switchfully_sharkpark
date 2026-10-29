@@ -21,18 +21,24 @@ public final class UserRequestValidator {
             throw RequestException.notFilledInField("user lastname");
         if (RequestValidator.isNotFilledIn(request.password()))
             throw RequestException.notFilledInField("user password");
+
         if (isValidPhoneNumber(request.mobileNumber()))
             throw RequestException.invalidField("user mobile number");
         if (isValidPhoneNumber(request.phoneNumber()))
             throw RequestException.invalidField("user phone number");
+        if (RequestValidator.isNotFilledIn(request.mobileNumber()) &&
+            RequestValidator.isNotFilledIn(request.phoneNumber()))
+            throw RequestException.oneOfTheTwoFieldsMustBeFilledIn("mobile number", "phone number");
 
         if (RequestValidator.isNotFilledIn(request.email()))
             throw RequestException.notFilledInField("user email");
         if (!isValidEmail(request.email())) throw RequestException.invalidField("user email");
+
         if (RequestValidator.isNegative(request.addressNumber()))
             throw RequestException.invalidField("user address number");
         if (RequestValidator.isNegative(request.postalCode()))
             throw RequestException.invalidField("user postal code");
+
         if (RequestValidator.isNotFilledIn(request.licensePlate()))
             throw RequestException.notFilledInField("user license plate");
     }
