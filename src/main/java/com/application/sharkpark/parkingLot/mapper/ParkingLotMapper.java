@@ -4,6 +4,7 @@ import com.application.sharkpark.domain.member.City;
 import com.application.sharkpark.domain.member.User;
 import com.application.sharkpark.dto.response.member.CityResponse;
 import com.application.sharkpark.dto.response.member.UserResponse;
+import com.application.sharkpark.mapper.member.UserMapper;
 import com.application.sharkpark.parkingLot.domain.ParkingLot;
 import com.application.sharkpark.parkingLot.dto.request.ParkingLotRequest;
 import com.application.sharkpark.parkingLot.dto.response.ParkingLotResponse;
@@ -24,19 +25,20 @@ public class ParkingLotMapper {
         this.cityRepository = cityRepository;
     }
 
-    public ParkingLot mapToParkingLot(ParkingLotRequest parkingLotRequest){
-        Optional<User> contactpersonOptional = userRepository.findById(parkingLotRequest.getUserId());
-        if (contactpersonOptional.isEmpty()){
+    public ParkingLot mapToParkingLot(ParkingLotRequest parkingLotRequest) {
+        Optional<User> contactpersonOptional
+                = userRepository.findById(parkingLotRequest.getUserId());
+        if (contactpersonOptional.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
 
         Optional<City> cityOptional = cityRepository.findById(parkingLotRequest.getCityId());
-        if (cityOptional.isEmpty()){
+        if (cityOptional.isEmpty()) {
             throw new IllegalArgumentException("City not found");
         }
 
         User contactPerson = contactpersonOptional.get();
-        City city =  cityOptional.get();
+        City city = cityOptional.get();
 
         return new ParkingLot(
                 parkingLotRequest.getName(),
@@ -50,7 +52,7 @@ public class ParkingLotMapper {
         );
     }
 
-    public ParkingLotResponse mapToParkingLotResponse(ParkingLot parkingLot){
+    public ParkingLotResponse mapToParkingLotResponse(ParkingLot parkingLot) {
         return new ParkingLotResponse(
                 parkingLot.getId(),
                 parkingLot.getName(),
@@ -60,13 +62,7 @@ public class ParkingLotMapper {
                 parkingLot.getAddressNumber(),
                 parkingLot.getPricePerHour(),
 
-                new UserResponse(
-                        parkingLot.getContactPerson().getFirstname()
-                        + ""
-                        + parkingLot.getContactPerson().getLastname(),
-                        parkingLot.getContactPerson().getPhoneNumber(),
-                        parkingLot.getContactPerson().getMobileNumber()
-                ),
+                UserMapper.toUserResponse(parkingLot.getContactPerson()),
 
                 new CityResponse(
                         parkingLot.getCity().getName(),
