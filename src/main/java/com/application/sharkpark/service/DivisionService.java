@@ -8,10 +8,9 @@ import com.application.sharkpark.exceptions.DivisionNameAlreadyExistException;
 import com.application.sharkpark.exceptions.UserNotFoundException;
 import com.application.sharkpark.mapper.DivisionMapper;
 import com.application.sharkpark.repository.DivisionRepository;
-import com.application.sharkpark.repository.member.UserRepository;
+import com.application.sharkpark.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.application.sharkpark.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
