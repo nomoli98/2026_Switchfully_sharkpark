@@ -23,8 +23,10 @@ public class DivisionController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<DivisionResponse> createDivision(@RequestBody CreateDivisionRequest request) {
+    public ResponseEntity<DivisionResponse> createDivision(@RequestBody CreateDivisionRequest request,
+                                                           @RequestHeader (value ="Authorization", required = false) String authorization) {
+        securityService.validateAuthorization(authorization, Feature.CREATE_DIVISION);
+
         DivisionResponse response = divisionService.createDivision(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
