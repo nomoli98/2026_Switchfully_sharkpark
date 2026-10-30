@@ -2,6 +2,7 @@ package com.application.sharkpark.controller;
 
 import com.application.sharkpark.domain.Division;
 import com.application.sharkpark.domain.User;
+import com.application.sharkpark.dto.request.CreateDivisionRequest;
 import com.application.sharkpark.dto.response.DivisionResponse;
 import com.application.sharkpark.enums.Role;
 import com.application.sharkpark.repository.DivisionRepository;
@@ -10,6 +11,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
@@ -50,84 +52,165 @@ class DivisionIntegrationTest {
         reset();
     }
 
-    @Test
-    void getAllDivisions_givenNoAuthorization() {
-        String errorMessage = given()
-                .when()
-                .get(BASE_PATH)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .extract()
-                .path(ERROR_PATH);
+    @Nested
+    class GetAllDivisions {
+        @Test
+        void getAllDivisions_givenNoAuthorization() {
+            String errorMessage = given()
+                    .when()
+                    .get(BASE_PATH)
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract()
+                    .path(ERROR_PATH);
 
-        assertThat(errorMessage).isEqualTo("Invalid credentials");
+            assertThat(errorMessage).isEqualTo("Invalid credentials");
+        }
+
+        @Test
+        void getAllDivisions_givenInvalidUser() {
+            String errorMessage = given()
+                    .auth()
+                    .preemptive()
+                    .basic("", "")
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .get(BASE_PATH)
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract()
+                    .path(ERROR_PATH);
+
+            assertThat(errorMessage).isEqualTo("Invalid credentials");
+        }
+
+        @Test
+        void getAllDivisions_givenExistingUserWithWrongAccess() {
+            User member = saveMember();
+            String errorMessage = given()
+                    .auth()
+                    .preemptive()
+                    .basic(member.getEmail(), member.getPassword())
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .get(BASE_PATH)
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.FORBIDDEN.value())
+                    .extract()
+                    .path(ERROR_PATH);
+
+            assertThat(errorMessage).isEqualTo("Access to the resource not allowed");
+        }
+
+        @Test
+        void getAllDivisions_givenRightManager() {
+            User manager = saveManager();
+            saveDivision(manager);
+
+            DivisionResponse[] divisionResponses = given()
+                    .auth()
+                    .preemptive()
+                    .basic(manager.getEmail(), manager.getPassword())
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .get(BASE_PATH)
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.OK.value())
+                    .extract()
+                    .as(DivisionResponse[].class);
+
+            assertThat(divisionResponses).hasSize(1)
+                    .extracting(DivisionResponse::name)
+                    .containsOnly("name");
+
+            assertThat(divisionResponses)
+                    .extracting(DivisionResponse::directorName)
+                    .containsOnly(String.join(" ",manager.getFirstname(),
+                            manager.getLastname()));
+
+        }
     }
 
-    @Test
-    void getAllDivisions_givenInvalidUser() {
-        String errorMessage = given()
-                .auth()
-                .preemptive()
-                .basic("", "")
-                .contentType(ContentType.JSON)
-                .when()
-                .get(BASE_PATH)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .extract()
-                .path(ERROR_PATH);
+    @Nested
+    class CreateSubdivision {
+        @Test
+        void createSubdivision_givenValidManagerAndExistingParentDivision_returnsUpdatedDivisionWithSubdivision() {
+            User manager = saveManager();
 
-        assertThat(errorMessage).isEqualTo("Invalid credentials");
-    }
+            Division parentDivision = new Division("Parent Division", "Original Parent Name", manager);
+            parentDivision = divisionRepository.save(parentDivision);
+            int parentDivisionId = parentDivision.getDivisionId();
 
-    @Test
-    void getAllDivisions_givenExistingUserWithWrongAccess() {
-        User member = saveMember();
-        String errorMessage = given()
-                .auth()
-                .preemptive()
-                .basic(member.getEmail(), member.getPassword())
-                .contentType(ContentType.JSON)
-                .when()
-                .get(BASE_PATH)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.FORBIDDEN.value())
-                .extract()
-                .path(ERROR_PATH);
+            CreateDivisionRequest validCreateDivisionRequest = new CreateDivisionRequest(
+                    "Valid ParkShark Belgium",
+                    "Belgium Parking Company",
+                    manager.getUserId()
+            );
 
-        assertThat(errorMessage).isEqualTo("Access to the resource not allowed");
-    }
+            DivisionResponse response = given()
+                    .auth()
+                    .preemptive()
+                    .basic(manager.getEmail(), manager.getPassword())
+                    .contentType(ContentType.JSON)
+                    .body(validCreateDivisionRequest)
+                    .when()
+                    .post(BASE_PATH + "/" + parentDivisionId + "/subdivisions")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.CREATED.value())
+                    .extract()
+                    .as(DivisionResponse.class);
 
-    @Test
-    void getAllDivisions_givenRightManager() {
-        User manager = saveManager();
-        saveDivision(manager);
+            assertThat(response).isNotNull();
+            assertThat(response.name()).isEqualTo("Parent Division");
+            assertThat(response.originalName()).isEqualTo("Original Parent Name");
+            assertThat(response.directorName()).isEqualTo(String.join(" ", manager.getFirstname(), manager.getLastname()).trim());
 
-        DivisionResponse[] divisionResponses = given()
-                .auth()
-                .preemptive()
-                .basic(manager.getEmail(), manager.getPassword())
-                .contentType(ContentType.JSON)
-                .when()
-                .get(BASE_PATH)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .as(DivisionResponse[].class);
+            assertThat(response.subdivisions())
+                    .hasSize(1)
+                    .allSatisfy(subdivision -> {
+                        assertThat(subdivision.subdivisionId())
+                                .isGreaterThan(1);
+                        assertThat(subdivision.name()).
+                                isEqualTo("Valid ParkShark Belgium");
+                        assertThat(subdivision.originalName())
+                                .isEqualTo("Belgium Parking Company");
+                        assertThat(subdivision.directorName())
+                                .isEqualTo(String.join(" ", manager.getFirstname(), manager.getLastname()).trim());
+                    });
+        }
 
-        assertThat(divisionResponses).hasSize(1)
-                        .extracting(DivisionResponse::name)
-                .containsOnly("name");
+        @Test
+        void createSubdivision_givenNonExistentParentId_returnsNotFoundStatus() {
+            User manager = saveManager();
+            int nonExistentId = 9999;
 
-        assertThat(divisionResponses)
-                .extracting(DivisionResponse::directorName)
-                        .containsOnly(String.join(" ",manager.getFirstname(),
-                                manager.getLastname()));
+            CreateDivisionRequest validCreateDivisionRequest = new CreateDivisionRequest(
+                    "Valid ParkShark Belgium",
+                    "Belgium Parking Company",
+                    manager.getUserId()
+            );
 
+            String errorMessage = given()
+                    .auth()
+                    .preemptive()
+                    .basic(manager.getEmail(), manager.getPassword())
+                    .contentType(ContentType.JSON)
+                    .body(validCreateDivisionRequest)
+                    .when()
+                    .post(BASE_PATH + "/" + nonExistentId + "/subdivisions")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.NOT_FOUND.value())
+                    .extract()
+                    .path(ERROR_PATH);
+
+            assertThat(errorMessage).isNotNull();
+        }
     }
 
 
@@ -136,7 +219,7 @@ class DivisionIntegrationTest {
         User user = new User();
         user.setRole(Role.MANAGER);
         user.setFirstname("Test");
-        user.setLastname("");
+        user.setLastname("Lastname");
         user.setEmail("test@email.com");
         user.setPassword("password");
         user.setLicensePlate("111-AAA");
@@ -148,7 +231,7 @@ class DivisionIntegrationTest {
         User user = new User();
         user.setRole(Role.MEMBER);
         user.setFirstname("Test");
-        user.setLastname("");
+        user.setLastname("Lastname");
         user.setEmail("member@email.com");
         user.setPassword("password");
         user.setLicensePlate("1112-AAA");
