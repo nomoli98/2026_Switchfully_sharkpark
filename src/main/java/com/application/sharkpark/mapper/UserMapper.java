@@ -46,9 +46,9 @@ public final class UserMapper {
                                      request.addressNumber(),
                                      request.postalCode(),
                                      request.licensePlate(),
-                                     null,                      // record defaults to today
-                                     Role.MEMBER,               // forced, not a default
-                                     request.membershipLevel()); // record defaults to BRONZE
+                                     null,
+                                     Role.MEMBER,
+                                     request.membershipLevel());
     }
 
     public static UserResponse toUserResponse(User user) {
@@ -59,7 +59,8 @@ public final class UserMapper {
                                 user.getPhoneNumber(),
                                 user.getEmail(),
                                 user.getLicensePlate(),
-                                user.getRegistrationDate());
+                                user.getRegistrationDate(),
+                                user.getMembershipLevel());
     }
 
     public static List<UserResponse> toListOfUserResponses(List<User> users) {

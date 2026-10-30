@@ -1,5 +1,7 @@
 package com.application.sharkpark.dto.response;
 
+import com.application.sharkpark.enums.MembershipLevel;
+
 import java.time.LocalDate;
 
 public record UserResponse(Integer userId,
@@ -9,5 +11,6 @@ public record UserResponse(Integer userId,
                            String phoneNumber,
                            String email,
                            String licensePlate,
-                           LocalDate registrationDate) {
+                           LocalDate registrationDate,
+                           MembershipLevel membershipLevel) {
 }
