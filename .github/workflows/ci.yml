@@ -23,8 +23,6 @@ jobs:
           distribution: temurin
           java-version: 25
 
-      - name: Compile code and execute tests
-        run: ./mvnw clean test
+      - name: Build, test, check coverage and generate report
+        run: ./mvnw -B clean jacoco:prepare-agent verify jacoco:report verify
 
-      - name: Check Code Coverage
-        run: ./mvnw -B jacoco:prepare-agent clean test jacoco:report verify
