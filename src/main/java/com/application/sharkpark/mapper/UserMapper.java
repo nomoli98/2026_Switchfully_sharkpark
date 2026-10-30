@@ -1,11 +1,11 @@
-package com.application.sharkpark.mapper.member;
+package com.application.sharkpark.mapper;
 
-import com.application.sharkpark.domain.member.City;
-import com.application.sharkpark.domain.member.User;
-import com.application.sharkpark.dto.request.member.CreateUserRequest;
-import com.application.sharkpark.dto.request.member.RegisterMemberRequest;
-import com.application.sharkpark.dto.response.member.UserResponse;
-import com.application.sharkpark.enums.member.Role;
+import com.application.sharkpark.domain.City;
+import com.application.sharkpark.domain.User;
+import com.application.sharkpark.dto.request.CreateUserRequest;
+import com.application.sharkpark.dto.request.RegisterMemberRequest;
+import com.application.sharkpark.dto.response.UserResponse;
+import com.application.sharkpark.enums.Role;
 import com.application.sharkpark.validator.UserRequestValidator;
 
 import java.time.LocalDate;

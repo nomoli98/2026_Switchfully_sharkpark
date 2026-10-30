@@ -1,4 +1,4 @@
-package com.application.sharkpark.parkingLot.enums;
+package com.application.sharkpark.enums;
 
 public enum ParkingLotCategory {
     UNDERGROUND_BUILDING,

@@ -1,9 +1,9 @@
 package com.application.sharkpark.controller.member;
 
-import com.application.sharkpark.domain.member.City;
-import com.application.sharkpark.domain.member.User;
-import com.application.sharkpark.dto.request.member.CreateUserRequest;
-import com.application.sharkpark.enums.member.Role;
+import com.application.sharkpark.domain.City;
+import com.application.sharkpark.domain.User;
+import com.application.sharkpark.dto.request.CreateUserRequest;
+import com.application.sharkpark.enums.Role;
 
 import java.time.LocalDate;
 import java.util.HashMap;

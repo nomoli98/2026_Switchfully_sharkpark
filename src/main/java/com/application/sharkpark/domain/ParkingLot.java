@@ -1,8 +1,6 @@
-package com.application.sharkpark.parkingLot.domain;
+package com.application.sharkpark.domain;
 
-import com.application.sharkpark.domain.member.City;
-import com.application.sharkpark.domain.member.User;
-import com.application.sharkpark.parkingLot.enums.ParkingLotCategory;
+import com.application.sharkpark.enums.ParkingLotCategory;
 import jakarta.persistence.*;
 
 @Entity

@@ -1,8 +1,7 @@
-package com.application.sharkpark.parkingLot.dto.request;
+package com.application.sharkpark.dto.request;
 
-import com.application.sharkpark.parkingLot.enums.ParkingLotCategory;
+import com.application.sharkpark.enums.ParkingLotCategory;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
