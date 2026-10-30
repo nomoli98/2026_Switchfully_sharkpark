@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("divisions")
 public class DivisionController {
@@ -28,6 +30,14 @@ public class DivisionController {
         DivisionResponse response = divisionService.createDivision(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping(produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<DivisionResponse> getAllDivisions(@RequestHeader(value = "Authorization", required = false)
+                                                  String authorization) {
+        securityService.validateAuthorization(authorization, Feature.GET_DIVISION);
+        return divisionService.getAllDivisions();
     }
 
 

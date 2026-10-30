@@ -9,10 +9,15 @@ import com.application.sharkpark.exceptions.UserNotFoundException;
 import com.application.sharkpark.mapper.DivisionMapper;
 import com.application.sharkpark.repository.DivisionRepository;
 import com.application.sharkpark.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DivisionService {
+    private static final Logger logger = LoggerFactory.getLogger(DivisionService.class);
     private final DivisionRepository divisionRepository;
     private final UserRepository userRepository;
 
@@ -34,6 +39,14 @@ public class DivisionService {
 
         return DivisionMapper.toResponse(savedDivision);
 
+    }
+
+    public List<DivisionResponse> getAllDivisions() {
+        logger.info("Received GET all Division request");
+        List<Division> divisions = divisionRepository.findAll();
+        logger.info("Fetched {} divisions", divisions.size());
+
+        return DivisionMapper.toResponse(divisions);
     }
 
 
