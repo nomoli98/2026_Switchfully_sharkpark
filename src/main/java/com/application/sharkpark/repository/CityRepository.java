@@ -1,6 +1,6 @@
-package com.application.sharkpark.repository.member;
+package com.application.sharkpark.repository;
 
-import com.application.sharkpark.domain.member.City;
+import com.application.sharkpark.domain.City;
 import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.Optional;

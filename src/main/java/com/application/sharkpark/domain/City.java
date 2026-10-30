@@ -1,4 +1,4 @@
-package com.application.sharkpark.domain.member;
+package com.application.sharkpark.domain;
 
 import jakarta.persistence.*;
 

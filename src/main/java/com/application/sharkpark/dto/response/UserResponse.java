@@ -1,4 +1,4 @@
-package com.application.sharkpark.dto.response.member;
+package com.application.sharkpark.dto.response;
 
 import java.time.LocalDate;
 

@@ -1,7 +1,7 @@
 package com.application.sharkpark.mapper;
 
 import com.application.sharkpark.domain.Division;
-import com.application.sharkpark.domain.member.User;
+import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.response.DivisionResponse;
 import org.junit.jupiter.api.Test;
 

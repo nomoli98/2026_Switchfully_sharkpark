@@ -1,8 +1,6 @@
-package com.application.sharkpark.parkingLot.dto.response;
+package com.application.sharkpark.dto.response;
 
-import com.application.sharkpark.dto.response.member.CityResponse;
-import com.application.sharkpark.dto.response.member.UserResponse;
-import com.application.sharkpark.parkingLot.enums.ParkingLotCategory;
+import com.application.sharkpark.enums.ParkingLotCategory;
 
 public class ParkingLotResponse {
 

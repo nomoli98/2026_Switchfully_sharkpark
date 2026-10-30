@@ -1,6 +1,4 @@
-package com.application.sharkpark.enums.member;
-
-import com.application.sharkpark.enums.Feature;
+package com.application.sharkpark.enums;
 
 import java.util.List;
 

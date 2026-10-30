@@ -1,7 +1,7 @@
-package com.application.sharkpark.service.member;
+package com.application.sharkpark.service;
 
-import com.application.sharkpark.domain.member.City;
-import com.application.sharkpark.repository.member.CityRepository;
+import com.application.sharkpark.domain.City;
+import com.application.sharkpark.repository.CityRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

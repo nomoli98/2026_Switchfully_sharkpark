@@ -1,7 +1,7 @@
 package com.application.sharkpark.service;
 
 import com.application.sharkpark.domain.Division;
-import com.application.sharkpark.domain.member.User;
+import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.CreateDivisionRequest;
 import com.application.sharkpark.dto.response.DivisionResponse;
 import com.application.sharkpark.exceptions.DivisionNameAlreadyExistException;
@@ -11,6 +11,7 @@ import com.application.sharkpark.repository.DivisionRepository;
 import com.application.sharkpark.repository.member.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.application.sharkpark.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
