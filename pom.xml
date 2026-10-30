@@ -149,7 +149,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>@{argLine} -XX:ErrorFile=${project.basedir}/logs/jvm-crashes/hs_err_pid%p.log</argLine>
+                    <argLine>@{argLine} -XX:ErrorFile=${project.basedir}/logs/jvm-crashes/hs_err_pid%p.log-XX:ReplayDataFile=./logs/jvm-crashes/replay_pid%p.log</argLine>
                 </configuration>
             </plugin>
         </plugins>
