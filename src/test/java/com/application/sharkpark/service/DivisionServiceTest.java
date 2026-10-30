@@ -162,6 +162,8 @@ class DivisionServiceTest {
                 "Belgium Parking Company",
                 99
         );
+    }
+
     @Test
     void returnDivisionWhenIdExists() {
         User director = new User();
