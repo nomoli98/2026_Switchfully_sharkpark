@@ -28,6 +28,9 @@ public class Invoice {
     @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
 
+    @Column(name = "closed_at")
+    private LocalDateTime closed_at;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "fk_user_id", nullable = false)
     private User user;
