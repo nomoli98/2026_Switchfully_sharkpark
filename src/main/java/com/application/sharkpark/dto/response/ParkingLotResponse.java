@@ -28,7 +28,41 @@ public class ParkingLotResponse {
         this.pricePerHour = pricePerHour;
         this.contactPerson = userResponse;
         this.city = cityResponse;
+    }
 
+    public int getParkingLotId() {
+        return parkingLotId;
+    }
 
+    public String getParkingLotName() {
+        return parkingLotName;
+    }
+
+    public ParkingLotCategory getParkingLotCategory() {
+        return parkingLotCategory;
+    }
+
+    public int getMaxCapacity() {
+        return maxCapacity;
+    }
+
+    public String getAddressStreet() {
+        return addressStreet;
+    }
+
+    public int getAddressNumber() {
+        return addressNumber;
+    }
+
+    public double getPricePerHour() {
+        return pricePerHour;
+    }
+
+    public UserResponse getContactPerson() {
+        return contactPerson;
+    }
+
+    public CityResponse getCity() {
+        return city;
     }
 }
