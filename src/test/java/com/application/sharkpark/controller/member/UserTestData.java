@@ -3,6 +3,7 @@ package com.application.sharkpark.controller.member;
 import com.application.sharkpark.domain.City;
 import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.CreateUserRequest;
+import com.application.sharkpark.enums.MembershipLevel;
 import com.application.sharkpark.enums.Role;
 
 import java.time.LocalDate;
@@ -41,6 +42,27 @@ public final class UserTestData {
         user.setCity(city);
         user.setLicensePlate(plate);
         user.setRegistrationDate(LocalDate.now());
+        user.setRole(Role.MEMBER);
+        user.setMembershipLevel(MembershipLevel.BRONZE);
+        return user;
+    }
+
+    /**
+     * A user ready to be persisted (no id) with the given role. Every NOT NULL column is filled in,
+     * including membership, so integration tests can save admins and managers directly.
+     */
+    public static User persistableUser(Role role, String email, String password, String plate, City city) {
+        User user = new User();
+        user.setFirstname(role.name().charAt(0) + role.name().substring(1).toLowerCase());
+        user.setLastname("Sharkpark");
+        user.setPassword(password);
+        user.setMobileNumber("+32470000000");
+        user.setEmail(email);
+        user.setCity(city);
+        user.setLicensePlate(plate);
+        user.setRegistrationDate(LocalDate.now());
+        user.setRole(role);
+        user.setMembershipLevel(MembershipLevel.BRONZE);
         return user;
     }
 
@@ -90,6 +112,9 @@ public final class UserTestData {
         private Integer addressNumber = 12;
         private Integer postalCode = BRUSSELS_POSTAL_CODE;
         private String licensePlate = VALID_PLATE;
+        private LocalDate registrationDate = null;
+        private Role role = Role.MEMBER;
+        private MembershipLevel membershipLevel = MembershipLevel.BRONZE;
 
         public RequestBuilder firstname(String v) { this.firstname = v; return this; }
         public RequestBuilder lastname(String v) { this.lastname = v; return this; }
@@ -97,14 +122,18 @@ public final class UserTestData {
         public RequestBuilder mobileNumber(String v) { this.mobileNumber = v; return this; }
         public RequestBuilder phoneNumber(String v) { this.phoneNumber = v; return this; }
         public RequestBuilder email(String v) { this.email = v; return this; }
+        public RequestBuilder addressStreet(String v) { this.addressStreet = v; return this; }
         public RequestBuilder addressNumber(Integer v) { this.addressNumber = v; return this; }
         public RequestBuilder postalCode(Integer v) { this.postalCode = v; return this; }
         public RequestBuilder licensePlate(String v) { this.licensePlate = v; return this; }
+        public RequestBuilder registrationDate(LocalDate v) { this.registrationDate = v; return this; }
+        public RequestBuilder role(Role v) { this.role = v; return this; }
+        public RequestBuilder membershipLevel(MembershipLevel v) { this.membershipLevel = v; return this; }
 
-        /** ASSUMPTION: adjust the argument order to match your CreateUserRequest record. */
         public CreateUserRequest build() {
             return new CreateUserRequest(firstname, lastname, password, mobileNumber, phoneNumber,
-                                         email, addressStreet, addressNumber, postalCode, licensePlate, LocalDate.now(), Role.MEMBER);
+                                         email, addressStreet, addressNumber, postalCode, licensePlate,
+                                         registrationDate, role, membershipLevel);
         }
     }
 }

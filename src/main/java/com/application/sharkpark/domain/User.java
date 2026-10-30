@@ -1,6 +1,7 @@
 package com.application.sharkpark.domain;
 
 import com.application.sharkpark.enums.Feature;
+import com.application.sharkpark.enums.MembershipLevel;
 import com.application.sharkpark.enums.Role;
 import jakarta.persistence.*;
 
@@ -51,6 +52,10 @@ public class User {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(name="membership", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private MembershipLevel membershipLevel;
 
     public User() {
     }
@@ -157,6 +162,14 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public MembershipLevel getMembershipLevel() {
+        return membershipLevel;
+    }
+
+    public void setMembershipLevel(MembershipLevel membershipLevel) {
+        this.membershipLevel = membershipLevel;
     }
 
     public boolean canHaveAccessTo(Feature feature) {
