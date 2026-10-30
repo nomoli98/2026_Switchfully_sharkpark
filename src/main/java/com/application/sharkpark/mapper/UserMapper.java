@@ -5,6 +5,7 @@ import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.CreateUserRequest;
 import com.application.sharkpark.dto.request.RegisterMemberRequest;
 import com.application.sharkpark.dto.response.UserResponse;
+import com.application.sharkpark.enums.MembershipLevel;
 import com.application.sharkpark.enums.Role;
 import com.application.sharkpark.validator.UserRequestValidator;
 
@@ -28,10 +29,9 @@ public final class UserMapper {
         user.setAddressNumber(request.addressNumber());
         user.setCity(city);
         user.setLicensePlate(request.licensePlate());
-        user.setRegistrationDate(request.registrationDate() != null
-                                 ? request.registrationDate()
-                                 : LocalDate.now());
-        user.setRole(request.role() != null ? request.role() : Role.MEMBER);
+        user.setRegistrationDate(request.registrationDate());
+        user.setRole(request.role());
+        user.setMembershipLevel(request.membershipLevel());
         return user;
     }
 
@@ -46,8 +46,9 @@ public final class UserMapper {
                                      request.addressNumber(),
                                      request.postalCode(),
                                      request.licensePlate(),
-                                     LocalDate.now(),
-                                     Role.MEMBER);
+                                     null,                      // record defaults to today
+                                     Role.MEMBER,               // forced, not a default
+                                     request.membershipLevel()); // record defaults to BRONZE
     }
 
     public static UserResponse toUserResponse(User user) {
