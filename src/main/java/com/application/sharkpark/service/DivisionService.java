@@ -81,6 +81,11 @@ public class DivisionService {
         if (divisionRepository.existsByName(createDivisionRequest.name())) {
             throw new DivisionNameAlreadyExistException(createDivisionRequest.name());
         }
+    public DivisionResponse getDivisionById(Integer divisionId) {
+        Division division= divisionRepository.findById(divisionId)
+                .orElseThrow(()-> new DivisionNotFoundException(divisionId));
+
+        return DivisionMapper.toResponse(division);
     }
 
 
