@@ -6,6 +6,7 @@ import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.CreateDivisionRequest;
 import com.application.sharkpark.dto.response.DivisionResponse;
 import com.application.sharkpark.exceptions.DivisionNameAlreadyExistException;
+import com.application.sharkpark.exceptions.DivisionNotFoundException;
 import com.application.sharkpark.exceptions.UserNotFoundException;
 import com.application.sharkpark.repository.DivisionRepository;
 import com.application.sharkpark.repository.UserRepository;
@@ -115,5 +116,43 @@ class DivisionServiceTest {
 
         verify(userRepository).findById(99);
         verify(divisionRepository, never()).save(any(Division.class));
+    }
+
+    @Test
+    void returnDivisionWhenIdExists() {
+        User director = new User();
+        director.setFirstname("Yv");
+        director.setLastname("Es");
+
+        Division division = new Division(
+                "ParkShark Belgium",
+                "Switch Fully",
+                director
+        );
+
+        when(divisionRepository.findById(1))
+                .thenReturn(Optional.of(division));
+
+        DivisionResponse response = divisionService.getDivisionById(1);
+
+        assertNotNull(response);
+        assertEquals("ParkShark Belgium", response.name());
+        assertEquals("Switch Fully", response.originalName());
+        assertEquals("Yv Es", response.directorName());
+
+        verify(divisionRepository).findById(1);
+    }
+
+    @Test
+    void throwExceptionWhenDivisionDoesNotExist() {
+        when(divisionRepository.findById(99))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                DivisionNotFoundException.class,
+                () -> divisionService.getDivisionById(99)
+        );
+
+        verify(divisionRepository).findById(99);
     }
 }
