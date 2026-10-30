@@ -1,6 +1,6 @@
 package com.application.sharkpark.validator;
 
-import com.application.sharkpark.dto.request.member.CreateUserRequest;
+import com.application.sharkpark.dto.request.CreateUserRequest;
 import com.application.sharkpark.exceptions.RequestException;
 
 import java.util.regex.Pattern;

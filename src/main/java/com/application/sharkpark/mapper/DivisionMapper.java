@@ -1,12 +1,13 @@
 package com.application.sharkpark.mapper;
 
 import com.application.sharkpark.domain.Division;
-import com.application.sharkpark.domain.member.User;
+import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.CreateDivisionRequest;
-import com.application.sharkpark.dto.request.member.CreateUserRequest;
 import com.application.sharkpark.dto.response.DivisionResponse;
 
-public class DivisionMapper {
+import java.util.List;
+
+public final class DivisionMapper {
     private DivisionMapper() {
     }
 
@@ -25,5 +26,11 @@ public class DivisionMapper {
                 division.getOriginalName(),
                 String.join(" ", division.getDirector().getFirstname(), division.getDirector().getLastname())
         );
+    }
+
+    public static List<DivisionResponse> toResponse(List<Division> divisions) {
+        return divisions.stream()
+                .map((DivisionMapper::toResponse))
+                .toList();
     }
 }

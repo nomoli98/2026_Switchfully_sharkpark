@@ -1,6 +1,5 @@
 package com.application.sharkpark.domain;
 
-import com.application.sharkpark.domain.member.User;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
