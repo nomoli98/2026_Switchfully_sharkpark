@@ -52,14 +52,14 @@ public class UserService {
     public UserResponse findById(Integer userId) {
         User user = userRepository.findById(userId)
                                   .orElseThrow(() -> new NotFoundException("User not found"));
-        logger.info("Fetching user by id: " + userId);
+        logger.info("Fetching user by id: {}", userId);
         return UserMapper.toUserResponse(user);
     }
 
     public UserResponse findByFullName(String firstname, String lastname) {
         User user = userRepository.findByFirstnameAndLastname(firstname, lastname)
                                   .orElseThrow(() -> new NotFoundException("User not found"));
-        logger.info("Fetching user by full name: " + firstname + " " + lastname);
+        logger.info("Fetching user by full name: {} {}", firstname, lastname);
 
         return UserMapper.toUserResponse(user);
     }
