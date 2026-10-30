@@ -2,13 +2,13 @@ package com.application.sharkpark.controller;
 
 import java.util.List;
 
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.application.sharkpark.dto.response.ParkingLotOverviewResponse;
+import com.application.sharkpark.dto.response.ParkingLotResponse;
 import com.application.sharkpark.enums.Feature;
 import com.application.sharkpark.exceptions.UnauthorizedException;
 import com.application.sharkpark.service.ParkingLotService;
@@ -115,5 +115,30 @@ class ParkingLotControllerTest {
         mockMvc.perform(get("/parkinglot"))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    void getParkingLot() throws Exception {
+
+        ParkingLotResponse response = mock(ParkingLotResponse.class);
+
+        when(parkingLotService.getParkingLot(1))
+                .thenReturn(response);
+
+        mockMvc.perform(get("/parkinglot/1")
+                        .header("Authorization", "test"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getParkingLot_notAuthorized() throws Exception {
+        doThrow(new UnauthorizedException())
+                .when(securityService)
+                .validateAuthorization(null, Feature.GET_PARKING_LOT);
+
+        mockMvc.perform(get("/parkinglot/1"))
+                .andExpect(status().isUnauthorized());
+    }
+
+
 
 }

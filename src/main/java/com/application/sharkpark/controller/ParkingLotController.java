@@ -48,4 +48,16 @@ public class ParkingLotController {
         return parkingLotService.getAllParkingLots();
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/{parkingLotId}", produces = "application/json")
+    public ParkingLotResponse getParkingLot(@PathVariable("parkingLotId") int parkingLotId,
+                                            @RequestHeader(value = "Authorization",  required = false) String authorization) {
+        securityService.validateAuthorization(authorization, Feature.GET_PARKING_LOT);
+
+        logger.info("Entered: getParkingLot");
+
+        return parkingLotService.getParkingLot(parkingLotId);
+
+    }
+
 }

@@ -14,6 +14,9 @@ import com.application.sharkpark.repository.ParkingLotRepository;
 import com.application.sharkpark.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -146,6 +149,36 @@ class ParkingLotServiceTest {
                 service.getAllParkingLots();
 
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getSingleParkingLotWithSpecificId() {
+
+        ParkingLot parkingLot = new ParkingLot();
+        ParkingLotResponse expectedResponse = mock(ParkingLotResponse.class);
+
+        when(parkingLotRepository.findById(1))
+                .thenReturn(Optional.of(parkingLot));
+
+        when(parkingLotMapper.mapToParkingLotResponse(parkingLot))
+                .thenReturn(expectedResponse);
+
+        ParkingLotResponse result = service.getParkingLot(1);
+
+        assertSame(expectedResponse, result);
+    }
+
+    @Test
+    void getParkingLot_parkingLotDoesNotExist() {
+        when(parkingLotRepository.findById(1))
+                .thenReturn(Optional.empty());
+
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> service.getParkingLot(1)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 
 
