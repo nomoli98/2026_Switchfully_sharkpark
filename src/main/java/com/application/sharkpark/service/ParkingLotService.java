@@ -4,6 +4,7 @@ import com.application.sharkpark.domain.City;
 import com.application.sharkpark.domain.ParkingLot;
 import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.ParkingLotRequest;
+import com.application.sharkpark.dto.response.ParkingLotOverviewResponse;
 import com.application.sharkpark.dto.response.ParkingLotResponse;
 import com.application.sharkpark.mapper.ParkingLotMapper;
 import com.application.sharkpark.repository.CityRepository;
@@ -12,6 +13,9 @@ import com.application.sharkpark.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ParkingLotService {
@@ -50,5 +54,14 @@ public class ParkingLotService {
         logger.info("Parking lot created with id: {}", savedParkingLot.getId());
 
         return parkingLotMapper.mapToParkingLotResponse(savedParkingLot);
+    }
+
+    public List<ParkingLotOverviewResponse> getAllParkingLots() {
+
+       List<ParkingLot> parkingLotsList = parkingLotRepository.findAll();
+
+       return parkingLotsList.stream()
+               .map(parkingLotMapper::mapToParkingLotOverviewResponse)
+               .collect(Collectors.toList());
     }
 }

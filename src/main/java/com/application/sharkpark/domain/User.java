@@ -179,4 +179,12 @@ public class User {
     public boolean doesPasswordMatch(String password) {
         return this.password != null && this.password.equals(password);
     }
+
+    public String getTelephoneNumber() {
+        if (phoneNumber != null) {
+            return phoneNumber;
+        }
+        return mobileNumber;
+    }
+
 }

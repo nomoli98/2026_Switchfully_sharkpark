@@ -1,9 +1,11 @@
 package com.application.sharkpark.service;
+import java.util.List;
 import java.util.Optional;
 import com.application.sharkpark.domain.City;
 import com.application.sharkpark.domain.ParkingLot;
 import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.ParkingLotRequest;
+import com.application.sharkpark.dto.response.ParkingLotOverviewResponse;
 import com.application.sharkpark.dto.response.ParkingLotResponse;
 import com.application.sharkpark.enums.ParkingLotCategory;
 import com.application.sharkpark.mapper.ParkingLotMapper;
@@ -106,6 +108,47 @@ class ParkingLotServiceTest {
 
         assertEquals("User not found", exception.getMessage());
     }
+
+    @Test
+    void getAllParkingLots() {
+        ParkingLot parkingLot1 = new ParkingLot();
+        ParkingLot parkingLot2 = new ParkingLot();
+
+        ParkingLotOverviewResponse response1 =
+                new ParkingLotOverviewResponse(1, "Parking 1", 100, "one@test.be", "0470111111");
+
+        ParkingLotOverviewResponse response2 =
+                new ParkingLotOverviewResponse(2, "Parking 2", 200, "two@test.be", "0470222222");
+
+        when(parkingLotRepository.findAll())
+                .thenReturn(List.of(parkingLot1, parkingLot2));
+
+        when(parkingLotMapper.mapToParkingLotOverviewResponse(parkingLot1))
+                .thenReturn(response1);
+
+        when(parkingLotMapper.mapToParkingLotOverviewResponse(parkingLot2))
+                .thenReturn(response2);
+
+        List<ParkingLotOverviewResponse> result =
+                service.getAllParkingLots();
+
+        assertEquals(2, result.size());
+        assertEquals(response1, result.get(0));
+        assertEquals(response2, result.get(1));
+    }
+
+    @Test
+    void getAllParkingLots_noParkingLots() {
+        when(parkingLotRepository.findAll())
+                .thenReturn(List.of());
+
+        List<ParkingLotOverviewResponse> result =
+                service.getAllParkingLots();
+
+        assertTrue(result.isEmpty());
+    }
+
+
 
 
 

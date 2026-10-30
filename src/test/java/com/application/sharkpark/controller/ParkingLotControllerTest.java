@@ -1,5 +1,16 @@
 package com.application.sharkpark.controller;
 
+import java.util.List;
+
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.application.sharkpark.dto.response.ParkingLotOverviewResponse;
+import com.application.sharkpark.enums.Feature;
+import com.application.sharkpark.exceptions.UnauthorizedException;
 import com.application.sharkpark.service.ParkingLotService;
 import com.application.sharkpark.service.SecurityService;
 
@@ -9,6 +20,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,7 +40,6 @@ class ParkingLotControllerTest {
 
     @Test
     void createParkingLot() throws Exception {
-        // GIVEN
         String json = """
                 {
                     "name": "Shark Parking",
@@ -41,7 +53,6 @@ class ParkingLotControllerTest {
                 }
                 """;
 
-        // WHEN + THEN
         mockMvc.perform(post("/parkinglot")
                         .header("Authorization", "test")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -51,26 +62,58 @@ class ParkingLotControllerTest {
 
     @Test
     void createParkingLot_nameIsBlank() throws Exception {
-        // GIVEN
         String json = """
-            {
-                "name": "",
-                "category": "UNDERGROUND_BUILDING",
-                "maxCapacity": 100,
-                "addressStreet": "Shark Street",
-                "addressNumber": 25,
-                "pricePerHour": 2.50,
-                "userId": 1,
-                "cityId": 2
-            }
-            """;
+                {
+                    "name": "",
+                    "category": "UNDERGROUND_BUILDING",
+                    "maxCapacity": 100,
+                    "addressStreet": "Shark Street",
+                    "addressNumber": 25,
+                    "pricePerHour": 2.50,
+                    "userId": 1,
+                    "cityId": 2
+                }
+                """;
 
-        // WHEN + THEN
         mockMvc.perform(post("/parkinglot")
                         .header("Authorization", "test")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getAllParkingLots() throws Exception {
+        ParkingLotOverviewResponse response =
+                new ParkingLotOverviewResponse(
+                        1,
+                        "Shark Parking",
+                        100,
+                        "manager@sharkpark.be",
+                        "0470123456"
+                );
+
+        when(parkingLotService.getAllParkingLots())
+                .thenReturn(List.of(response));
+
+        mockMvc.perform(get("/parkinglot")
+                        .header("Authorization", "test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].parkingLotId").value(1))
+                .andExpect(jsonPath("$[0].name").value("Shark Parking"))
+                .andExpect(jsonPath("$[0].capacity").value(100))
+                .andExpect(jsonPath("$[0].contactEmail").value("manager@sharkpark.be"))
+                .andExpect(jsonPath("$[0].contactTelephone").value("0470123456"));
+    }
+
+    @Test
+    void getAllParkingLots_notAuthorized() throws Exception {
+        doThrow(new UnauthorizedException())
+                .when(securityService)
+                .validateAuthorization(null, Feature.GET_ALL_PARKING_LOTS);
+
+        mockMvc.perform(get("/parkinglot"))
+                .andExpect(status().isUnauthorized());
     }
 
 }
