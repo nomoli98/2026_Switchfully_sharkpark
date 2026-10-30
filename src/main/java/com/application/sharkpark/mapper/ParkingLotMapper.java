@@ -59,9 +59,8 @@ public class ParkingLotMapper {
                 parkingLot.getName(),
                 parkingLot.getMaxCapacity(),
                 parkingLot.getContactPerson().getEmail(),
-                parkingLot.getContactPerson().getMobileNumber()
+                parkingLot.getContactPerson().getTelephoneNumber()
         );
     }
-
 
 }

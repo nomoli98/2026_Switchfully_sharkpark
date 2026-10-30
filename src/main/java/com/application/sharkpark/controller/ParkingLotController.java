@@ -1,5 +1,6 @@
 package com.application.sharkpark.controller;
 
+import com.application.sharkpark.dto.response.ParkingLotOverviewResponse;
 import com.application.sharkpark.enums.Feature;
 import com.application.sharkpark.dto.request.ParkingLotRequest;
 import com.application.sharkpark.dto.response.ParkingLotResponse;
@@ -37,9 +38,11 @@ public class ParkingLotController {
         return parkingLotService.createParkingLot(parkingLotRequest);
     }
 
-    @ResponseStatus(HttpStatus.FOUND)
-    @GetMapping
-    public List<ParkingLotResponse> getAllParkingLots() {
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(produces = "application/json")
+    public List<ParkingLotOverviewResponse> getAllParkingLots(@RequestHeader(value = "Authorization", required = false) String authorization) {
+        securityService.validateAuthorization(authorization, Feature.GET_ALL_PARKING_LOTS);
+
         logger.info("Entered: getAllParkingLots");
 
         return parkingLotService.getAllParkingLots();

@@ -4,6 +4,7 @@ import com.application.sharkpark.domain.City;
 import com.application.sharkpark.domain.ParkingLot;
 import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.ParkingLotRequest;
+import com.application.sharkpark.dto.response.ParkingLotOverviewResponse;
 import com.application.sharkpark.dto.response.ParkingLotResponse;
 import com.application.sharkpark.enums.ParkingLotCategory;
 import org.junit.jupiter.api.Test;
@@ -80,8 +81,37 @@ class ParkingLotMapperTest {
 
         ParkingLotMapper mapper = new ParkingLotMapper();
 
-        ParkingLotResponse result =
-                mapper.mapToParkingLotResponse(parkingLot);
-        return result;
+        return mapper.mapToParkingLotResponse(parkingLot);
     }
+
+    @Test
+    void mapToParkingLotOverviewResponse() {
+        User contactPerson = new User();
+        contactPerson.setEmail("john@sharkpark.be");
+        contactPerson.setMobileNumber("0470123456");
+
+        ParkingLot parkingLot = new ParkingLot(
+                "Shark Parking",
+                ParkingLotCategory.UNDERGROUND_BUILDING,
+                100,
+                "Shark Street",
+                25,
+                2.50,
+                contactPerson,
+                new City()
+        );
+        parkingLot.setId(1);
+
+        ParkingLotMapper mapper = new ParkingLotMapper();
+
+        ParkingLotOverviewResponse result =
+                mapper.mapToParkingLotOverviewResponse(parkingLot);
+
+        assertEquals(1, result.parkingLotId());
+        assertEquals("Shark Parking", result.name());
+        assertEquals(100, result.capacity());
+        assertEquals("john@sharkpark.be", result.contactEmail());
+        assertEquals("0470123456", result.contactTelephone());
+    }
+
 }
