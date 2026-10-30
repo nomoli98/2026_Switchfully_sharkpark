@@ -11,6 +11,7 @@ import com.application.sharkpark.exceptions.UserNotFoundException;
 import com.application.sharkpark.repository.DivisionRepository;
 import com.application.sharkpark.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -24,6 +25,9 @@ class DivisionServiceTest {
     private DivisionRepository divisionRepository;
     private UserRepository userRepository;
     private DivisionService divisionService;
+    private User director;
+    private CreateDivisionRequest validCreateDivisionRequest;
+    private CreateDivisionRequest invalidCreateDivisionRequest;
 
     @BeforeEach
     void setUp() {
@@ -34,22 +38,14 @@ class DivisionServiceTest {
                 divisionRepository,
                 userRepository
         );
+        addDirector();
+        addCreateDivisionRequests();
     }
 
     @Test
     void createDivisionWhenNameIsAvailableAndDirectorExists() {
-        CreateDivisionRequest request = new CreateDivisionRequest(
-                "ParkShark Belgium",
-                "Belgium Parking Company",
-                1
-        );
 
-        User director = new User();
-        director.setUserId(1);
-        director.setFirstname("Yv");
-        director.setLastname("Es");
-
-        when(divisionRepository.existsByName(request.name()))
+        when(divisionRepository.existsByName(validCreateDivisionRequest.name()))
                 .thenReturn(false);
 
         when(userRepository.findById(1))
@@ -59,51 +55,41 @@ class DivisionServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         DivisionResponse response =
-                divisionService.createDivision(request);
+                divisionService.createDivision(validCreateDivisionRequest);
 
         assertNotNull(response);
-        assertEquals("ParkShark Belgium", response.name());
+        assertEquals("Valid ParkShark Belgium", response.name());
         assertEquals(
                 "Belgium Parking Company",
                 response.originalName()
         );
         assertEquals("Yv Es", response.directorName());
 
-        verify(divisionRepository).existsByName(request.name());
+        verify(divisionRepository).existsByName(validCreateDivisionRequest.name());
         verify(userRepository).findById(1);
         verify(divisionRepository).save(any(Division.class));
     }
 
     @Test
     void throwExceptionWhenDivisionNameAlreadyExists() {
-        CreateDivisionRequest request = new CreateDivisionRequest(
-                "ParkShark Belgium",
-                "Belgium Parking Company",
-                1
-        );
 
-        when(divisionRepository.existsByName(request.name()))
+        when(divisionRepository.existsByName(validCreateDivisionRequest.name()))
                 .thenReturn(true);
 
         assertThrows(
                 DivisionNameAlreadyExistException.class,
-                () -> divisionService.createDivision(request)
+                () -> divisionService.createDivision(validCreateDivisionRequest)
         );
 
-        verify(divisionRepository).existsByName(request.name());
+        verify(divisionRepository).existsByName(validCreateDivisionRequest.name());
         verifyNoInteractions(userRepository);
         verify(divisionRepository, never()).save(any(Division.class));
     }
 
     @Test
     void throwExceptionWhenDirectorDoesNotExist() {
-        CreateDivisionRequest request = new CreateDivisionRequest(
-                "ParkShark Belgium",
-                "Belgium Parking Company",
-                99
-        );
 
-        when(divisionRepository.existsByName(request.name()))
+        when(divisionRepository.existsByName(invalidCreateDivisionRequest.name()))
                 .thenReturn(false);
 
         when(userRepository.findById(99))
@@ -111,13 +97,71 @@ class DivisionServiceTest {
 
         assertThrows(
                 UserNotFoundException.class,
-                () -> divisionService.createDivision(request)
+                () -> divisionService.createDivision(invalidCreateDivisionRequest)
         );
 
         verify(userRepository).findById(99);
         verify(divisionRepository, never()).save(any(Division.class));
     }
 
+    @Nested
+    class CreateSubdivision {
+
+        @Test
+        void givenNonExistingDivision_thenThrowDivisionNotFoundException() {
+            assertThrows(DivisionNotFoundException.class,
+                    () -> divisionService.createSubdivision(validCreateDivisionRequest, 2));
+        }
+
+
+            @Test
+            void givenValidDirectorAndDivision_whenCreateSubdivision_thenReturnsDivisionResponse() {
+                Division parentDivision = new Division("ParkShark Belgium","Belgium Parking Company", director);
+
+                when(divisionRepository.existsByName(any())).thenReturn(false);
+                when(userRepository.findById(any())).thenReturn(Optional.of(director));
+
+                when(divisionRepository.findByDivisionId(1))
+                        .thenReturn(Optional.of(parentDivision));
+
+                when(divisionRepository.save(any(Division.class)))
+                        .thenAnswer(invocation -> invocation.getArgument(0));
+
+                DivisionResponse response =
+                        divisionService.createSubdivision(validCreateDivisionRequest, 1);
+
+                assertNotNull(response);
+                assertEquals("ParkShark Belgium", response.name());
+                assertEquals("Belgium Parking Company", response.originalName());
+                assertEquals("Yv Es", response.directorName());
+                assertEquals("Valid ParkShark Belgium", response.subdivisions().get(0).name());
+
+                verify(divisionRepository).findByDivisionId(1);
+                verify(divisionRepository, times(2)).save(any(Division.class));
+        }
+    }
+
+
+
+
+    private void addDirector() {
+        director = new User();
+        director.setUserId(1);
+        director.setFirstname("Yv");
+        director.setLastname("Es");
+    }
+
+    private void addCreateDivisionRequests() {
+        validCreateDivisionRequest = new CreateDivisionRequest(
+                "Valid ParkShark Belgium",
+                "Belgium Parking Company",
+                1
+        );
+        invalidCreateDivisionRequest = new CreateDivisionRequest(
+                "Invalid ParkShark Belgium",
+                "Belgium Parking Company",
+                99
+        );
     @Test
     void returnDivisionWhenIdExists() {
         User director = new User();

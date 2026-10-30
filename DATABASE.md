@@ -11,6 +11,7 @@ erDiagram
     cities ||--o{ users: "fk_city_id"
     cities ||--o{ parking_lots: "fk_city_id"
     users ||--o{ divisions: "fk_director_id"
+    divisions ||--o{ divisions: "fk_subdivision_id"
     users ||--o{ parking_lots: "fk_contact_person_id"
 
     cities {
@@ -39,6 +40,7 @@ erDiagram
         varchar name UK
         varchar original_name
         int fk_director_id FK "nullable"
+        int fk_subdivision_id FK
     }
     parking_lots {
         int parking_lot_id PK
@@ -64,15 +66,15 @@ erDiagram
 
 ## Migrations
 
-| Version | Script                                | What it does                                                                                                                                                                 |
-|---------|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| V1      | `V1__create_initial_schema.sql`       | Creates `cities`, `users`, `divisions` and `parking_lots` with their foreign keys.                                                                                           |
-| V2      | `V2__alter_table_ParkingLots.sql`     | Adds `name` and `price_per_hour` to `parking_lots`; makes its address columns `NOT NULL`.                                                                                    |
-| V3      | `V3__seeds_for_all_tables.sql`        | First seed data. Now fully commented out (superseded by V5).                                                                                                                 |
-| V4      | `V4__alter_table_user.sql`            | Changes `users.registration_date` from `TIMESTAMP` to `DATE`.                                                                                                                |
-| V5      | `V5__altered_seeds.sql`               | Seed data matching the new date format: 10 cities, 12 users (1 admin, 4 managers, 7 members), 6 divisions, 13 parking lots. All seeded users share the same bcrypt password. |
-| V6      | `V6__something.sql`                   | v6 explaination                                                                                                                                                              |                                                                                                                                                              |
-| V7      | `V7__alter_table_user_membership.sql` | Adds `users.membership` (default `BRONZE`) with a check constraint allowing `BRONZE`, `SILVER`, `GOLD`.                                                                      |
+| Version | Script                                          | What it does                                                                                                                                                                 |
+|---------|-------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| V1      | `V1__create_initial_schema.sql`                 | Creates `cities`, `users`, `divisions` and `parking_lots` with their foreign keys.                                                                                           |
+| V2      | `V2__alter_table_ParkingLots.sql`               | Adds `name` and `price_per_hour` to `parking_lots`; makes its address columns `NOT NULL`.                                                                                    |
+| V3      | `V3__seeds_for_all_tables.sql`                  | First seed data. Now fully commented out (superseded by V5).                                                                                                                 |
+| V4      | `V4__alter_table_user.sql`                      | Changes `users.registration_date` from `TIMESTAMP` to `DATE`.                                                                                                                |
+| V5      | `V5__altered_seeds.sql`                         | Seed data matching the new date format: 10 cities, 12 users (1 admin, 4 managers, 7 members), 6 divisions, 13 parking lots. All seeded users share the same bcrypt password. |
+| V6      | `V6__alter_table_divisions_add_subdivision.sql` | Add subdivision_id foreign key.                                                                                                                                              |                                                                                                                                                              |
+| V7      | `V7__alter_table_user_membership.sql`           | Adds `users.membership` (default `BRONZE`) with a check constraint allowing `BRONZE`, `SILVER`, `GOLD`.                                                                      |
 
 ## Working with Flyway
 

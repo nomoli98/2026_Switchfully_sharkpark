@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,7 +48,8 @@ class DivisionControllerTest {
                 1,
                 "Switch",
                 "Fully",
-                "Yv Es"
+                "Yv Es",
+                List.of()
         );
 
         String authorization = "Bearer test-token";
@@ -113,7 +116,8 @@ class DivisionControllerTest {
                         1,
                         "ParkShark Belgium",
                         "Belgium Parking Company",
-                        "John Doe"
+                        "John Doe",
+                        List.of()
                 ));
 
         divisionController.createDivision(request, authorization);
