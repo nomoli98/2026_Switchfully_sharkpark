@@ -3,6 +3,7 @@ package com.application.sharkpark.controller;
 import com.application.sharkpark.domain.Division;
 import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.response.DivisionResponse;
+import com.application.sharkpark.enums.MembershipLevel;
 import com.application.sharkpark.enums.Role;
 import com.application.sharkpark.repository.DivisionRepository;
 import com.application.sharkpark.repository.UserRepository;
@@ -141,6 +142,7 @@ class DivisionIntegrationTest {
         user.setPassword("password");
         user.setLicensePlate("111-AAA");
         user.setRegistrationDate(LocalDate.now());
+        user.setMembershipLevel(MembershipLevel.BRONZE);
         return userRepository.save(user);
     }
 
@@ -153,6 +155,7 @@ class DivisionIntegrationTest {
         user.setPassword("password");
         user.setLicensePlate("1112-AAA");
         user.setRegistrationDate(LocalDate.now());
+        user.setMembershipLevel(MembershipLevel.BRONZE);
         return userRepository.save(user);
     }
 
