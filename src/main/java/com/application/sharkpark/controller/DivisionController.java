@@ -14,6 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("divisions")
 public class DivisionController {
+    private static final String APPLICATION_JSON = "application/json";
+
     private final DivisionService divisionService;
     private final SecurityService securityService;
 
@@ -32,12 +34,30 @@ public class DivisionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
     public List<DivisionResponse> getAllDivisions(@RequestHeader(value = "Authorization", required = false)
                                                   String authorization) {
         securityService.validateAuthorization(authorization, Feature.GET_DIVISION);
         return divisionService.getAllDivisions();
+    }
+
+    @PostMapping(path = "{id}/subdivisions", produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
+    @ResponseStatus(HttpStatus.CREATED)
+    public DivisionResponse createSubdivision(@RequestHeader(value = "Authorization", required = false) String authorization,
+                                              @RequestBody CreateDivisionRequest createDivisionRequest,
+                                              @PathVariable("id") int divisionId) {
+        securityService.validateAuthorization(authorization, Feature.CREATE_DIVISION);
+        return divisionService.createSubdivision(createDivisionRequest, divisionId);
+    }
+    @GetMapping("/{divisionId}")
+    public ResponseEntity<DivisionResponse> getDivision(@PathVariable Integer divisionId,
+                                                        @RequestHeader(value = "Authorization", required = false) String authorization) {
+        securityService.validateAuthorization(authorization, Feature.GET_DIVISION);
+
+        DivisionResponse response = divisionService.getDivisionById(divisionId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 

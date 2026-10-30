@@ -2,6 +2,9 @@ package com.application.sharkpark.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table (name = "DIVISIONS")
 public class Division {
@@ -21,11 +24,15 @@ public class Division {
     @JoinColumn(name = "FK_DIRECTOR_ID", referencedColumnName = "user_id")
     private User director;
 
+    @OneToMany
+    @JoinColumn(name = "FK_SUBDIVISION_ID")
+    private List<Division> subdivisions;
+
     public Division(String name, String originalName, User director) {
         this.name = name;
         this.originalName = originalName;
         this.director = director;
-
+        this.subdivisions = new ArrayList<>();
     }
 
     protected Division() {
@@ -46,5 +53,13 @@ public class Division {
 
     public User getDirector() {
         return director;
+    }
+
+    public List<Division> getSubdivisions() {
+        return subdivisions;
+    }
+
+    public void addSubdivision(Division subdivision) {
+        subdivisions.add(subdivision);
     }
 }

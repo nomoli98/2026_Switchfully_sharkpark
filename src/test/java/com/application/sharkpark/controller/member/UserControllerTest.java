@@ -2,6 +2,7 @@ package com.application.sharkpark.controller.member;
 
 import com.application.sharkpark.domain.City;
 import com.application.sharkpark.domain.User;
+import com.application.sharkpark.enums.MembershipLevel;
 import com.application.sharkpark.enums.Role;
 import com.application.sharkpark.repository.CityRepository;
 import com.application.sharkpark.repository.UserRepository;
@@ -79,6 +80,7 @@ class UserControllerTest {
         admin.setLicensePlate("ADMIN-001");
         admin.setRegistrationDate(LocalDate.now());
         admin.setRole(Role.ADMIN);
+        admin.setMembershipLevel(MembershipLevel.BRONZE);
         userRepository.save(admin);
     }
 

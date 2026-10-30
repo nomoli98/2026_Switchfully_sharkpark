@@ -1,6 +1,7 @@
 package com.application.sharkpark.validator;
 
 import com.application.sharkpark.dto.request.CreateUserRequest;
+import com.application.sharkpark.enums.Role;
 import com.application.sharkpark.exceptions.RequestException;
 
 import java.util.regex.Pattern;
@@ -45,9 +46,9 @@ public final class UserRequestValidator {
 
         if (!hasMobile && !hasPhone)
             throw RequestException.oneOfTheTwoFieldsMustBeFilledIn("mobile number", "phone number");
-        if (hasMobile && !isValidPhoneNumber(mobileNumber))
+        if (hasMobile && isNotValidPhoneNumber(mobileNumber))
             throw RequestException.invalidField("user mobile number");
-        if (hasPhone && !isValidPhoneNumber(phoneNumber))
+        if (hasPhone && isNotValidPhoneNumber(phoneNumber))
             throw RequestException.invalidField("user phone number");
     }
 
@@ -55,14 +56,14 @@ public final class UserRequestValidator {
         return email != null && EMAIL_PATTERN.matcher(email).matches();
     }
 
-    static boolean isValidPhoneNumber(String phoneNumber) {
+    static boolean isNotValidPhoneNumber(String phoneNumber) {
         String normalized = normalizePhoneNumber(phoneNumber);
-        return normalized != null && PHONE_PATTERN.matcher(normalized).matches();
+        return normalized == null || !PHONE_PATTERN.matcher(normalized).matches();
     }
-
 
     public static String normalizePhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.isBlank()) return null;
         return PHONE_SEPARATORS.matcher(phoneNumber).replaceAll("");
     }
+
 }
