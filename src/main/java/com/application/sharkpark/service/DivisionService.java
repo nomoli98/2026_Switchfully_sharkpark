@@ -29,7 +29,7 @@ public class DivisionService {
 
     public DivisionResponse createDivision(CreateDivisionRequest createDivisionRequest) {
         logger.info("Received POST Division request with name = {} and directorID = {}",
-                createDivisionRequest.name(), createDivisionRequest.directorId());
+                    createDivisionRequest.name(), createDivisionRequest.directorId());
 
         Division savedDivision = saveDivision(createDivisionRequest);
 
@@ -47,12 +47,17 @@ public class DivisionService {
         return DivisionMapper.toResponse(divisions);
     }
 
-    public DivisionResponse createSubdivision(CreateDivisionRequest createDivisionRequest, int divisionId) {
-        logger.info("Received POST Subdivision request with name = {}, directorID = {} and divisionID = {}",
-                createDivisionRequest.name(), createDivisionRequest.directorId(), divisionId);
+    public DivisionResponse createSubdivision(CreateDivisionRequest createDivisionRequest,
+                                              int divisionId) {
+        logger.info(
+                "Received POST Subdivision request with name = {}, directorID = {} and divisionID = {}",
+                createDivisionRequest.name(),
+                createDivisionRequest.directorId(),
+                divisionId);
 
         Division division = divisionRepository.findByDivisionId(divisionId)
-                .orElseThrow(() -> new DivisionNotFoundException(divisionId));
+                                              .orElseThrow(() -> new DivisionNotFoundException(
+                                                      divisionId));
 
         Division savedSubdivision = saveDivision(createDivisionRequest);
 
@@ -70,9 +75,10 @@ public class DivisionService {
         validateDivisionRequest(createDivisionRequest);
 
         User director = userRepository.findById(createDivisionRequest.directorId())
-                .orElseThrow(()-> new UserNotFoundException(createDivisionRequest.directorId()));
+                                      .orElseThrow(() -> new UserNotFoundException(
+                                              createDivisionRequest.directorId()));
 
-        Division division = DivisionMapper.toEntity(createDivisionRequest, director );
+        Division division = DivisionMapper.toEntity(createDivisionRequest, director);
 
         return divisionRepository.save(division);
     }
@@ -81,9 +87,12 @@ public class DivisionService {
         if (divisionRepository.existsByName(createDivisionRequest.name())) {
             throw new DivisionNameAlreadyExistException(createDivisionRequest.name());
         }
+    }
+
     public DivisionResponse getDivisionById(Integer divisionId) {
-        Division division= divisionRepository.findById(divisionId)
-                .orElseThrow(()-> new DivisionNotFoundException(divisionId));
+        Division division = divisionRepository.findById(divisionId)
+                                              .orElseThrow(() -> new DivisionNotFoundException(
+                                                      divisionId));
 
         return DivisionMapper.toResponse(division);
     }
