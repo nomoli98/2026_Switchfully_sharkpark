@@ -40,5 +40,15 @@ public class DivisionController {
         return divisionService.getAllDivisions();
     }
 
+    @GetMapping("/{divisionId}")
+    public ResponseEntity<DivisionResponse> getDivision(@PathVariable Integer divisionId,
+                                                        @RequestHeader(value = "Authorization", required = false) String authorization) {
+        securityService.validateAuthorization(authorization, Feature.GET_DIVISION);
+
+        DivisionResponse response = divisionService.getDivisionById(divisionId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
 }

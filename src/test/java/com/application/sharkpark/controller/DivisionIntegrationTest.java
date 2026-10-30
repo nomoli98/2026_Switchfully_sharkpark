@@ -131,6 +131,49 @@ class DivisionIntegrationTest {
 
     }
 
+    @Test
+    void getDivisionById_givenExistingDivision() {
+        User manager = saveManager();
+        saveDivision(manager);
+
+        int divisionId = divisionRepository.findAll().get(0).getDivisionId();
+
+        DivisionResponse response = given()
+                .auth()
+                .preemptive()
+                .basic(manager.getEmail(), manager.getPassword())
+                .contentType(ContentType.JSON)
+                .when()
+                .get(BASE_PATH + "/" + divisionId)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(DivisionResponse.class);
+
+        assertThat(response.name()).isEqualTo("name");
+        assertThat(response.originalName()).isEqualTo("originalName");
+
+    }
+
+    @Test
+    void getDivisionById_givenNonExistingDivision() {
+        User manager = saveManager();
+        String errorMessage = given()
+                .auth()
+                .preemptive()
+                .basic(manager.getEmail(), manager.getPassword())
+                .when()
+                .get(BASE_PATH + "/99")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .extract()
+                .path(ERROR_PATH);
+
+        assertThat(errorMessage).isEqualTo("Division with id 99 does not exist");
+    }
+
 
 
     private User saveManager() {

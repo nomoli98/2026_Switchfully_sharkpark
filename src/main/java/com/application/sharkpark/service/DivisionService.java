@@ -5,6 +5,7 @@ import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.CreateDivisionRequest;
 import com.application.sharkpark.dto.response.DivisionResponse;
 import com.application.sharkpark.exceptions.DivisionNameAlreadyExistException;
+import com.application.sharkpark.exceptions.DivisionNotFoundException;
 import com.application.sharkpark.exceptions.UserNotFoundException;
 import com.application.sharkpark.mapper.DivisionMapper;
 import com.application.sharkpark.repository.DivisionRepository;
@@ -47,6 +48,13 @@ public class DivisionService {
         logger.info("Fetched {} divisions", divisions.size());
 
         return DivisionMapper.toResponse(divisions);
+    }
+
+    public DivisionResponse getDivisionById(Integer divisionId) {
+        Division division= divisionRepository.findById(divisionId)
+                .orElseThrow(()-> new DivisionNotFoundException(divisionId));
+
+        return DivisionMapper.toResponse(division);
     }
 
 
