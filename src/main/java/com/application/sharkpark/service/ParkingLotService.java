@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ParkingLotService {
 
@@ -29,5 +31,13 @@ public class ParkingLotService {
         ParkingLot savedParkingLot = parkingLotRepository.save(parkingLot);
         logger.info("Parking lot created with id: {}", savedParkingLot.getId());
         return parkingLotMapper.mapToParkingLotResponse(savedParkingLot);
+    }
+
+    public List<ParkingLotResponse> getAllParkingLots() {
+
+        //stream to new ParkingLotOverviewResponse
+       List<ParkingLotResponse> overview = parkingLotRepository.findAll();
+
+       return overview;
     }
 }

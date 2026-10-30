@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/parkinglot")
 public class ParkingLotController {
@@ -33,6 +35,14 @@ public class ParkingLotController {
         securityService.validateAuthorization(authorization, Feature.CREATE_PARKING_LOT);
         logger.info("Entered: createParkingLot");
         return parkingLotService.createParkingLot(parkingLotRequest);
+    }
+
+    @ResponseStatus(HttpStatus.FOUND)
+    @GetMapping
+    public List<ParkingLotResponse> getAllParkingLots() {
+        logger.info("Entered: getAllParkingLots");
+
+        return parkingLotService.getAllParkingLots();
     }
 
 }

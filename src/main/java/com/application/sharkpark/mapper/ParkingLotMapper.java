@@ -5,6 +5,7 @@ import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.response.CityResponse;
 import com.application.sharkpark.domain.ParkingLot;
 import com.application.sharkpark.dto.request.ParkingLotRequest;
+import com.application.sharkpark.dto.response.ParkingLotOverviewResponse;
 import com.application.sharkpark.dto.response.ParkingLotResponse;
 import com.application.sharkpark.repository.CityRepository;
 import com.application.sharkpark.repository.UserRepository;
@@ -66,6 +67,16 @@ public class ParkingLotMapper {
                         parkingLot.getCity().getName(),
                         parkingLot.getCity().getPostalCode()
                 )
+        );
+    }
+
+    public ParkingLotOverviewResponse mapToParkingLotOverviewResponse(ParkingLot parkingLot) {
+        return new ParkingLotOverviewResponse(
+                parkingLot.getId(),
+                parkingLot.getName(),
+                parkingLot.getMaxCapacity(),
+                parkingLot.getContactPerson().getEmail(),
+                parkingLot.getContactPerson().getMobileNumber()
         );
     }
 
