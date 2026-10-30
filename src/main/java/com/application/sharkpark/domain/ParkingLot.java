@@ -1,6 +1,7 @@
 package com.application.sharkpark.domain;
 
 import com.application.sharkpark.enums.ParkingLotCategory;
+import com.application.sharkpark.exceptions.ParkingLotFullException;
 import jakarta.persistence.*;
 
 @Entity
@@ -29,6 +30,8 @@ public class ParkingLot {
     @Column(name = "price_per_hour")
     private double pricePerHour;
 
+    @Column(name = "current_occupancy")
+    private int currentOccupancy;
 
     @ManyToOne
     @JoinColumn(name = "fk_contact_person_id")
@@ -106,6 +109,22 @@ public class ParkingLot {
 
     public double getPricePerHour() {
         return pricePerHour;
+    }
+
+    public void incrementOccupancy() {
+        currentOccupancy++;
+    }
+
+    public ParkingAllocation allocateSpot(User member, String licensePlate) {
+        if (isFull()) {
+            throw new ParkingLotFullException();
+        }
+        incrementOccupancy();
+        return new ParkingAllocation(this, member, licensePlate);
+    }
+
+    private boolean isFull() {
+        return currentOccupancy < maxCapacity;
     }
 
 }

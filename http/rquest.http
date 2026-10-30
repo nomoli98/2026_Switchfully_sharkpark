@@ -1,0 +1,8 @@
+POST localhost:8080/parking-allocations
+Content-Type: application/json
+Authorization: Basic dGhvbWFzLmNsYWVzQG1haWwuYmU6JDJiJDEwJGxaRVhQeldicVovNEl3LllyQ2YwbE9aaEltWUQ3MkZSQWpCNkkuaWo0ZWVHRUgyYmhPbzl5
+
+{
+  "licensePlate": "TEST",
+  "parkingLotId": 1
+}

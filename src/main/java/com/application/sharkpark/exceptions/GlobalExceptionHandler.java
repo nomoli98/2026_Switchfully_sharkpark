@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -31,10 +32,23 @@ public class GlobalExceptionHandler {
         return response(HttpStatus.FORBIDDEN, exception.getMessage());
     }
 
-    @ExceptionHandler({NotFoundException.class, DivisionNotFoundException.class})
+    @ExceptionHandler({NotFoundException.class, DivisionNotFoundException.class, UserNotFoundException.class})
     public ResponseEntity<Map<String, String>> handleNotFound(RuntimeException exception) {
         logger.warn("Resource not found: {}", exception.getMessage());
         return response(HttpStatus.NOT_FOUND, exception.getMessage());
+    }
+
+    @ExceptionHandler(ParkingLotFullException.class)
+    public ResponseEntity<Map<String, String>> handleForbidden(ParkingLotFullException exception) {
+        logger.warn("Conflict: {}", exception.getMessage());
+        return response(HttpStatus.CONFLICT, exception.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException exception) {
+
+        logger.warn("Bad request: {}", exception.getBindingResult());
+        return response(HttpStatus.BAD_REQUEST, exception.getBindingResult().toString());
     }
 
     private ResponseEntity<Map<String, String>> response(HttpStatus status, String message) {
