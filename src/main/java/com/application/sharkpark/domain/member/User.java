@@ -5,7 +5,6 @@ import com.application.sharkpark.enums.member.Role;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -47,7 +46,7 @@ public class User {
     private String licensePlate;
 
     @Column(name = "registration_date", nullable = false)
-    private LocalDateTime registrationDate;
+    private LocalDate registrationDate;
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -144,11 +143,11 @@ public class User {
         this.licensePlate = licensePlate;
     }
 
-    public LocalDateTime getRegistrationDate() {
+    public LocalDate getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(LocalDateTime registrationDate) {
+    public void setRegistrationDate(LocalDate registrationDate) {
         this.registrationDate = registrationDate;
     }
 
