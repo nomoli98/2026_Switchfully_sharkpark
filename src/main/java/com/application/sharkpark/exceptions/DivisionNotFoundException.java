@@ -1,7 +1,7 @@
 package com.application.sharkpark.exceptions;
 
-public class DivisionNotFoundException extends RuntimeException {
-    public DivisionNotFoundException(int divisionId) {
-        super("Division not found with ID = " + divisionId);
+public class DivisionNotFoundException extends NotFoundException {
+    public DivisionNotFoundException(Integer divisionId) {
+        super("Division with id " + divisionId + " does not exist");
     }
 }

@@ -103,7 +103,6 @@ class DivisionControllerTest {
 
     @Test
     void shouldValidateAuthorizationBeforeCreatingDivision() {
-        // Arrange
         CreateDivisionRequest request = new CreateDivisionRequest(
                 "ParkShark Belgium",
                 "Belgium Parking Company",
@@ -121,10 +120,8 @@ class DivisionControllerTest {
                         List.of()
                 ));
 
-        // Act
         divisionController.createDivision(request, authorization);
 
-        // Assert
         var inOrder = inOrder(securityService, divisionService);
         inOrder.verify(securityService).validateAuthorization(
                 authorization,
