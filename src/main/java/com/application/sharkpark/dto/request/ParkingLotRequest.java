@@ -14,26 +14,21 @@ public class ParkingLotRequest {
     @NotNull(message = "Category is required")
     private ParkingLotCategory category;
 
-    @NotBlank (message = "Max capacity cannot be blank")
     @Positive (message = "maxcap needs to be a positive number")
     private int maxCapacity;
 
     @NotBlank(message = "address cannot be blank")
     private String addressStreet;
 
-    @NotBlank(message = "address cannot be blank")
     @Positive(message = "number needs to be a positive number")
     private int addressNumber;
 
-    @NotBlank
     @Positive
     private double pricePerHour;
 
-    @NotBlank(message = "userId cannot be blank")
     @Positive(message = "id needs to be positive")
     private int userId;
 
-    @NotBlank(message = "cityId cannot be blank")
     @Positive(message = "id needs to be positive")
     private int cityId;
 

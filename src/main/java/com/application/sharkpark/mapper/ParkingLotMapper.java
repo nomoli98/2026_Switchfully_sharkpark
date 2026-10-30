@@ -15,28 +15,11 @@ import java.util.Optional;
 @Component
 public class ParkingLotMapper {
 
-    private final UserRepository userRepository;
-    private final CityRepository cityRepository;
+    public ParkingLot mapToParkingLot(
+            ParkingLotRequest parkingLotRequest,
+            User contactPerson,
+            City city) {
 
-    public ParkingLotMapper(UserRepository userRepository, CityRepository cityRepository) {
-        this.userRepository = userRepository;
-        this.cityRepository = cityRepository;
-    }
-
-    public ParkingLot mapToParkingLot(ParkingLotRequest parkingLotRequest) {
-        Optional<User> contactpersonOptional
-                = userRepository.findById(parkingLotRequest.getUserId());
-        if (contactpersonOptional.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
-        }
-
-        Optional<City> cityOptional = cityRepository.findById(parkingLotRequest.getCityId());
-        if (cityOptional.isEmpty()) {
-            throw new IllegalArgumentException("City not found");
-        }
-
-        User contactPerson = contactpersonOptional.get();
-        City city = cityOptional.get();
 
         return new ParkingLot(
                 parkingLotRequest.getName(),
