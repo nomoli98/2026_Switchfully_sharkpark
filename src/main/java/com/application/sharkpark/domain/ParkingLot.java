@@ -16,7 +16,6 @@ public class ParkingLot {
     private String name;
 
     @Column(name = "category", nullable = false, length = 25)
-    @Enumerated(EnumType.STRING)
     private ParkingLotCategory category;
 
     @Column(name = "max_capacity", nullable = false)
