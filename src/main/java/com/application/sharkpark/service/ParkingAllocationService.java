@@ -4,7 +4,9 @@ import com.application.sharkpark.domain.ParkingAllocation;
 import com.application.sharkpark.domain.ParkingLot;
 import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.CreateParkingAllocationRequest;
-import com.application.sharkpark.dto.request.ParkingAllocationResponse;
+import com.application.sharkpark.dto.response.ParkingAllocationResponse;
+import com.application.sharkpark.enums.ParkingAllocationStatus;
+import com.application.sharkpark.exceptions.ActiveParkingAllocationExistException;
 import com.application.sharkpark.exceptions.NotFoundException;
 import com.application.sharkpark.exceptions.RequestException;
 import com.application.sharkpark.exceptions.UserNotFoundException;
@@ -16,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -42,6 +46,8 @@ public class ParkingAllocationService {
 
         ParkingLot parkingLot = getParkingLot(request.parkingLotId());
 
+        validateParkingAllocationRequest(request.licensePlate());
+
         ParkingAllocation parkingAllocation = parkingLot.allocateSpot(member, request.licensePlate());
 
         parkingLotRepository.save(parkingLot);
@@ -54,7 +60,7 @@ public class ParkingAllocationService {
     }
 
     private User getMember(int memberId) {
-        return userRepository.findByUserId(memberId)
+        return userRepository.findById(memberId)
                 .orElseThrow(() -> new UserNotFoundException(memberId));
     }
 
@@ -69,4 +75,15 @@ public class ParkingAllocationService {
         return parkingLotRepository.findByParkingLotIdForUpdate(parkingLotId)
                 .orElseThrow(() -> new NotFoundException("ParkingLot not found with ID = " + parkingLotId));
     }
+
+    private void validateParkingAllocationRequest(String licensePlate) {
+        List<ParkingAllocation> parkingAllocations = parkingAllocationRepository
+                .findAllByLicensePlateAndStatus(licensePlate, ParkingAllocationStatus.ACTIVE);
+
+        if (!parkingAllocations.isEmpty()) {
+            throw new ActiveParkingAllocationExistException(licensePlate,
+                    parkingAllocations.get(0).getParkingAllocationId());
+        }
+    }
+
 }

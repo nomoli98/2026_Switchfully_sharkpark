@@ -1,5 +1,6 @@
 package com.application.sharkpark.domain;
 
+import com.application.sharkpark.enums.ParkingAllocationStatus;
 import jakarta.persistence.*;
 
 import java.time.Clock;
@@ -18,6 +19,10 @@ public class ParkingAllocation {
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ParkingAllocationStatus status;
+
     @ManyToOne
     @JoinColumn(name = "fk_user_id")
     private User member;
@@ -34,6 +39,7 @@ public class ParkingAllocation {
         this.member = member;
         this.licensePlate = licensePlate;
         this.startTime = LocalDateTime.now(Clock.systemDefaultZone());
+        this.status = ParkingAllocationStatus.ACTIVE;
     }
 
     public Integer getParkingAllocationId() {
@@ -54,5 +60,9 @@ public class ParkingAllocation {
 
     public ParkingLot getParkingLot() {
         return parkingLot;
+    }
+
+    public ParkingAllocationStatus getStatus() {
+        return status;
     }
 }

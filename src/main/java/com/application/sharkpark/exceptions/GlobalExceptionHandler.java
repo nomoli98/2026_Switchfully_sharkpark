@@ -2,12 +2,14 @@ package com.application.sharkpark.exceptions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -16,7 +18,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RequestException.class)
     public ResponseEntity<Map<String, String>> handleRequestException(RequestException exception) {
-        logger.warn("Bad request: {}", exception.getMessage());
+        logBadRequest(exception.getMessage());
         return response(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
@@ -38,20 +40,28 @@ public class GlobalExceptionHandler {
         return response(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
-    @ExceptionHandler(ParkingLotFullException.class)
-    public ResponseEntity<Map<String, String>> handleForbidden(ParkingLotFullException exception) {
+    @ExceptionHandler({ParkingLotFullException.class, ActiveParkingAllocationExistException.class})
+    public ResponseEntity<Map<String, String>> handleForbidden(RuntimeException exception) {
         logger.warn("Conflict: {}", exception.getMessage());
         return response(HttpStatus.CONFLICT, exception.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException exception) {
+        List<String> messages = exception.getBindingResult().getAllErrors()
+                        .stream()
+                                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                                        .toList();
 
-        logger.warn("Bad request: {}", exception.getBindingResult());
-        return response(HttpStatus.BAD_REQUEST, exception.getBindingResult().toString());
+        logBadRequest(messages.toString());
+        return response(HttpStatus.BAD_REQUEST, messages.toString());
     }
 
     private ResponseEntity<Map<String, String>> response(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(Map.of("message", message));
+    }
+
+    private void logBadRequest(String message) {
+        logger.warn("Bad request: {}", message);
     }
 }

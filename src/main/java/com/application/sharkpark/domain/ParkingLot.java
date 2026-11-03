@@ -16,6 +16,7 @@ public class ParkingLot {
     private String name;
 
     @Column(name = "category", nullable = false, length = 25)
+    @Enumerated(EnumType.STRING)
     private ParkingLotCategory category;
 
     @Column(name = "max_capacity", nullable = false)
@@ -117,14 +118,14 @@ public class ParkingLot {
 
     public ParkingAllocation allocateSpot(User member, String licensePlate) {
         if (isFull()) {
-            throw new ParkingLotFullException();
+            throw new ParkingLotFullException(parkingLotId);
         }
         incrementOccupancy();
         return new ParkingAllocation(this, member, licensePlate);
     }
 
     private boolean isFull() {
-        return currentOccupancy < maxCapacity;
+        return currentOccupancy >= maxCapacity;
     }
 
 }
