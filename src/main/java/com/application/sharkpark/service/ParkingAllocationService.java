@@ -16,10 +16,16 @@ import com.application.sharkpark.repository.ParkingLotRepository;
 import com.application.sharkpark.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.criteria.Predicate;
 
 
 @Service
@@ -30,7 +36,9 @@ public class ParkingAllocationService {
     private final UserRepository userRepository;
     private final ParkingLotRepository parkingLotRepository;
 
-    public ParkingAllocationService(ParkingAllocationRepository parkingAllocationRepository, UserRepository userRepository, ParkingLotRepository parkingLotRepository) {
+    public ParkingAllocationService(ParkingAllocationRepository parkingAllocationRepository,
+                                    UserRepository userRepository,
+                                    ParkingLotRepository parkingLotRepository) {
         this.parkingAllocationRepository = parkingAllocationRepository;
         this.userRepository = userRepository;
         this.parkingLotRepository = parkingLotRepository;
@@ -39,7 +47,7 @@ public class ParkingAllocationService {
     @Transactional
     public ParkingAllocationResponse createParkingAllocation(CreateParkingAllocationRequest request) {
         logger.info("Received POST parking allocation with memberID = {} and parkingLotID = {}",
-                request.memberId(), request.memberId());
+                    request.memberId(), request.memberId());
 
         User member = getMember(request.memberId());
         validateLicensePlate(member, request.licensePlate());
@@ -48,20 +56,75 @@ public class ParkingAllocationService {
 
         validateParkingAllocationRequest(request.licensePlate());
 
-        ParkingAllocation parkingAllocation = parkingLot.allocateSpot(member, request.licensePlate());
+        ParkingAllocation parkingAllocation = parkingLot.allocateSpot(member,
+                                                                      request.licensePlate());
 
         parkingLotRepository.save(parkingLot);
-        ParkingAllocation savedParkingAllocation = parkingAllocationRepository.save(parkingAllocation);
+        ParkingAllocation savedParkingAllocation = parkingAllocationRepository.save(
+                parkingAllocation);
 
-        logger.info("Saved parking allocation with ID = {}", savedParkingAllocation.getParkingAllocationId());
+        logger.info("Saved parking allocation with ID = {}",
+                    savedParkingAllocation.getParkingAllocationId());
 
         return ParkingAllocationMapper.toResponse(savedParkingAllocation);
 
     }
 
+    public List<ParkingAllocationResponse> getAllocations(ParkingAllocationStatus status,
+                                                          Sort.Direction direction,
+                                                          Integer limit) {
+        return findAllocations(null, null, status, direction, limit);
+    }
+
+    public List<ParkingAllocationResponse> getAllocationsByMember(Integer memberUserId,
+                                                          ParkingAllocationStatus status,
+                                                          Sort.Direction direction,
+                                                          Integer limit) {
+        return findAllocations(memberUserId, null, status, direction, limit);
+    }
+
+    public List<ParkingAllocationResponse> getAllocationsByParkingLot(Integer parkingLotId,
+                                                                      ParkingAllocationStatus status,
+                                                                      Sort.Direction direction,
+                                                                      Integer limit) {
+        return findAllocations(null, parkingLotId, status, direction, limit);
+    }
+
+
+    private List<ParkingAllocationResponse> findAllocations(Integer memberUserId,
+                                                            Integer parkingLotId,
+                                                            ParkingAllocationStatus status,
+                                                            Sort.Direction direction,
+                                                            Integer limit) {
+        Specification<ParkingAllocation> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (status != null) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Sort sort = Sort.by(direction, "startTime");
+
+        if (limit == null) {
+            return ParkingAllocationMapper.toResponseList(parkingAllocationRepository.findAll(spec,
+                                                                                              sort));
+        }
+
+        return ParkingAllocationMapper.toResponseList(parkingAllocationRepository.findAll(spec,
+                                                                                          PageRequest.of(
+                                                                                                  0,
+                                                                                                  limit,
+                                                                                                  sort))
+                                                                                 .getContent());
+    }
+
+
     private User getMember(int memberId) {
         return userRepository.findById(memberId)
-                .orElseThrow(() -> new UserNotFoundException(memberId));
+                             .orElseThrow(() -> new UserNotFoundException(memberId));
     }
 
     private void validateLicensePlate(User member, String licensePlate) {
@@ -73,7 +136,8 @@ public class ParkingAllocationService {
 
     private ParkingLot getParkingLot(int parkingLotId) {
         return parkingLotRepository.findByParkingLotIdForUpdate(parkingLotId)
-                .orElseThrow(() -> new NotFoundException("ParkingLot not found with ID = " + parkingLotId));
+                                   .orElseThrow(() -> new NotFoundException(
+                                           "ParkingLot not found with ID = " + parkingLotId));
     }
 
     private void validateParkingAllocationRequest(String licensePlate) {
@@ -82,7 +146,8 @@ public class ParkingAllocationService {
 
         if (!parkingAllocations.isEmpty()) {
             throw new ActiveParkingAllocationExistException(licensePlate,
-                    parkingAllocations.get(0).getParkingAllocationId());
+                                                            parkingAllocations.get(0)
+                                                                              .getParkingAllocationId());
         }
     }
 
