@@ -18,28 +18,10 @@ public class SecurityService {
         this.userRepository = userRepository;
     }
 
-    public void validateAuthorization(String authorization, Feature feature) {
-        if (authorization == null || !authorization.contains("Basic ")) {
-            throw new UnauthorizedException();
-        }
+    public void validateAuthorization(String email, Feature feature) {
 
-        String encodedCredentials = authorization.substring(6);
-        String decodedCredentials = new String(Base64.getDecoder().decode(encodedCredentials), StandardCharsets.UTF_8);
-
-        if (!decodedCredentials.contains(":")) {
-            throw new UnauthorizedException();
-        }
-
-        String[] credentials = decodedCredentials.split(":", 2);
-        String emailAddress = credentials[0];
-        String password = credentials[1];
-
-        User user = userRepository.findByEmail(emailAddress)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(UnauthorizedException::new);
-
-        if (!user.doesPasswordMatch(password)) {
-            throw new UnauthorizedException();
-        }
 
         if (!user.canHaveAccessTo(feature)) {
             throw new ForbiddenException();
