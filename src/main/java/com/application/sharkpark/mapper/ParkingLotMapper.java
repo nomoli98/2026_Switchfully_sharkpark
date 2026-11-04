@@ -1,6 +1,7 @@
 package com.application.sharkpark.mapper;
 
 import com.application.sharkpark.domain.City;
+import com.application.sharkpark.domain.Division;
 import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.response.CityResponse;
 import com.application.sharkpark.domain.ParkingLot;
@@ -19,7 +20,7 @@ public class ParkingLotMapper {
     public ParkingLot mapToParkingLot(
             ParkingLotRequest parkingLotRequest,
             User contactPerson,
-            City city) {
+            City city, Division division) {
 
 
         return new ParkingLot(
@@ -30,7 +31,8 @@ public class ParkingLotMapper {
                 parkingLotRequest.getAddressNumber(),
                 parkingLotRequest.getPricePerHour(),
                 contactPerson,
-                city
+                city,
+                division
         );
     }
 
@@ -49,7 +51,9 @@ public class ParkingLotMapper {
                 new CityResponse(
                         parkingLot.getCity().getName(),
                         parkingLot.getCity().getPostalCode()
-                )
+                ),
+
+                DivisionMapper.toResponse(parkingLot.getDivision())
         );
     }
 

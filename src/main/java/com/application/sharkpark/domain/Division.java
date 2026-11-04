@@ -35,7 +35,7 @@ public class Division {
         this.subdivisions = new ArrayList<>();
     }
 
-    protected Division() {
+    public Division() {
 
     }
 

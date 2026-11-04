@@ -5,7 +5,7 @@ import java.util.List;
 public enum Role {
     ADMIN(List.of(Feature.CREATE_MEMBER, Feature.CREATE_DIVISION, Feature.CREATE_PARKING_LOT,
                   Feature.VIEW_ALL_MEMBERS)),
-    MANAGER(List.of(Feature.CREATE_DIVISION, Feature.CREATE_PARKING_LOT, Feature.VIEW_ALL_MEMBERS, Feature.GET_DIVISION, Feature.GET_ALL_PARKING_LOTS)),
+    MANAGER(List.of(Feature.CREATE_DIVISION, Feature.CREATE_PARKING_LOT, Feature.VIEW_ALL_MEMBERS, Feature.GET_DIVISION, Feature.GET_PARKING_LOT)),
     MEMBER(List.of(Feature.CREATE_MEMBER, Feature.CREATE_PARKING_ALLOCATION, Feature.STOP_PARKING_ALLOCATION));
 
     private final List<Feature> features;

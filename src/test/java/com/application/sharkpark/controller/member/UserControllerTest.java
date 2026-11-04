@@ -94,7 +94,7 @@ class UserControllerTest {
     // ---------- Helpers ----------
 
     private RequestSpecification asAdmin() {
-        return given().auth().preemptive().basic(ADMIN_EMAIL, ADMIN_PASSWORD);
+        return given().header("Authorization", ADMIN_EMAIL);
     }
 
     private int postUser(Map<String, Object> body) {

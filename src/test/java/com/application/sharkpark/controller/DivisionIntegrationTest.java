@@ -91,9 +91,7 @@ class DivisionIntegrationTest {
         void getAllDivisions_givenExistingUserWithWrongAccess() {
             User member = saveMember();
             String errorMessage = given()
-                    .auth()
-                    .preemptive()
-                    .basic(member.getEmail(), member.getPassword())
+                    .header("Authorization", member.getEmail())
                     .contentType(ContentType.JSON)
                     .when()
                     .get(BASE_PATH)
@@ -112,9 +110,7 @@ class DivisionIntegrationTest {
             saveDivision(manager);
 
             DivisionResponse[] divisionResponses = given()
-                    .auth()
-                    .preemptive()
-                    .basic(manager.getEmail(), manager.getPassword())
+                    .header("Authorization", manager.getEmail())
                     .contentType(ContentType.JSON)
                     .when()
                     .get(BASE_PATH)
@@ -153,9 +149,7 @@ class DivisionIntegrationTest {
             );
 
             DivisionResponse response = given()
-                    .auth()
-                    .preemptive()
-                    .basic(manager.getEmail(), manager.getPassword())
+                    .header("Authorization", manager.getEmail())
                     .contentType(ContentType.JSON)
                     .body(validCreateDivisionRequest)
                     .when()
@@ -197,9 +191,7 @@ class DivisionIntegrationTest {
             );
 
             String errorMessage = given()
-                    .auth()
-                    .preemptive()
-                    .basic(manager.getEmail(), manager.getPassword())
+                    .header("Authorization", manager.getEmail())
                     .contentType(ContentType.JSON)
                     .body(validCreateDivisionRequest)
                     .when()
@@ -222,9 +214,7 @@ class DivisionIntegrationTest {
         int divisionId = divisionRepository.findAll().get(0).getDivisionId();
 
         DivisionResponse response = given()
-                .auth()
-                .preemptive()
-                .basic(manager.getEmail(), manager.getPassword())
+                .header("Authorization", manager.getEmail())
                 .contentType(ContentType.JSON)
                 .when()
                 .get(BASE_PATH + "/" + divisionId)
@@ -243,9 +233,7 @@ class DivisionIntegrationTest {
     void getDivisionById_givenNonExistingDivision() {
         User manager = saveManager();
         String errorMessage = given()
-                .auth()
-                .preemptive()
-                .basic(manager.getEmail(), manager.getPassword())
+                .header("Authorization", manager.getEmail())
                 .when()
                 .get(BASE_PATH + "/99")
                 .then()
