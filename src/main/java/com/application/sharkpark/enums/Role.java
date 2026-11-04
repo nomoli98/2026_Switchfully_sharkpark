@@ -12,7 +12,7 @@ public enum Role {
                     Feature.GET_PARKING_LOT,
                     Feature.GET_PARKING_ALLOCATION,
                     Feature.STOP_PARKING_ALLOCATION)),
-    MEMBER(List.of(Feature.CREATE_MEMBER));
+    MEMBER(List.of(Feature.CREATE_MEMBER, Feature.GET_INVOICE));
 
     private final List<Feature> features;
 
