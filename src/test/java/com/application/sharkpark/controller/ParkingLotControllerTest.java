@@ -47,7 +47,8 @@ class ParkingLotControllerTest {
                     "addressNumber": 25,
                     "pricePerHour": 2.50,
                     "userId": 1,
-                    "cityId": 2
+                    "cityId": 2,
+                    "divisionId": 3
                 }
                 """;
 
@@ -61,17 +62,18 @@ class ParkingLotControllerTest {
     @Test
     void createParkingLot_nameIsBlank() throws Exception {
         String json = """
-                {
-                    "name": "",
-                    "category": "UNDERGROUND_BUILDING",
-                    "maxCapacity": 100,
-                    "addressStreet": "Shark Street",
-                    "addressNumber": 25,
-                    "pricePerHour": 2.50,
-                    "userId": 1,
-                    "cityId": 2
-                }
-                """;
+            {
+                "name": "",
+                "category": "UNDERGROUND_BUILDING",
+                "maxCapacity": 100,
+                "addressStreet": "Shark Street",
+                "addressNumber": 25,
+                "pricePerHour": 2.50,
+                "userId": 1,
+                "cityId": 2,
+                "divisionId": 3
+            }
+            """;
 
         mockMvc.perform(post("/parkinglot")
                         .header("Authorization", "admin@sharkpark.be")

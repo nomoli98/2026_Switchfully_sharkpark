@@ -32,10 +32,13 @@ public class ParkingLotRequest {
     @Positive(message = "id needs to be positive")
     private int cityId;
 
+    @Positive(message = "Division id must be positive")
+    private int divisionId;
+
 
     public ParkingLotRequest(String name, ParkingLotCategory category,
                              int maxCapacity, String addressStreet, Integer addressNumber,
-                             double pricePerHour,  int userId, int cityId) {
+                             double pricePerHour,  int userId, int cityId,  int divisionId) {
         this.name = name;
         this.category = category;
         this.maxCapacity = maxCapacity;
@@ -44,6 +47,7 @@ public class ParkingLotRequest {
         this.pricePerHour = pricePerHour;
         this.userId = userId;
         this.cityId = cityId;
+        this.divisionId = divisionId;
 
     }
 
@@ -77,5 +81,8 @@ public class ParkingLotRequest {
 
     public int getCityId() {
         return cityId;
+    }
+    public int getDivisionId() {
+        return divisionId;
     }
 }

@@ -42,9 +42,13 @@ public class ParkingLot {
     @JoinColumn(name = "fk_city_id")
     private City city;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_division_id")
+    private Division division;
+
     public ParkingLot(String name, ParkingLotCategory category, Integer maxCapacity,
                       String addressStreet, Integer addressNumber, double pricePerHour,
-                      User contactPerson, City city) {
+                      User contactPerson, City city, Division division) {
         this.name = name;
         this.category = category;
         this.maxCapacity = maxCapacity;
@@ -53,6 +57,7 @@ public class ParkingLot {
         this.pricePerHour = pricePerHour;
         this.contactPerson = contactPerson;
         this.city = city;
+        this.division = division;
 
     }
 
@@ -128,4 +133,7 @@ public class ParkingLot {
         return currentOccupancy >= maxCapacity;
     }
 
+    public Division getDivision() {
+        return division;
+    }
 }

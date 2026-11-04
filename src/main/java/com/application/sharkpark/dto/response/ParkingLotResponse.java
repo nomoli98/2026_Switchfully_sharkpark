@@ -14,11 +14,12 @@ public class ParkingLotResponse {
 
     private UserResponse contactPerson;
     private CityResponse city;
+    private final DivisionResponse division;
 
     public ParkingLotResponse(int parkingLotId, String parkingLotName, ParkingLotCategory parkingLotCategory,
                               int maxCapacity, String addressStreet,
                               int addressNumber, double pricePerHour,
-                              UserResponse userResponse, CityResponse cityResponse) {
+                              UserResponse userResponse, CityResponse cityResponse,  DivisionResponse divisionResponse) {
         this.parkingLotId = parkingLotId;
         this.parkingLotName = parkingLotName;
         this.parkingLotCategory = parkingLotCategory;
@@ -28,6 +29,7 @@ public class ParkingLotResponse {
         this.pricePerHour = pricePerHour;
         this.contactPerson = userResponse;
         this.city = cityResponse;
+        this.division = divisionResponse;
     }
 
     public int getParkingLotId() {
@@ -64,5 +66,9 @@ public class ParkingLotResponse {
 
     public CityResponse getCity() {
         return city;
+    }
+
+    public DivisionResponse getDivision() {
+        return division;
     }
 }
