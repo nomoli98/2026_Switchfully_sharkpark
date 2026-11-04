@@ -16,8 +16,8 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(RequestException.class)
-    public ResponseEntity<Map<String, String>> handleRequestException(RequestException exception) {
+    @ExceptionHandler({RequestException.class, InvalidParkingAllocationOwnerException.class})
+    public ResponseEntity<Map<String, String>> handleRequestException(RuntimeException exception) {
         logBadRequest(exception.getMessage());
         return response(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
@@ -40,7 +40,8 @@ public class GlobalExceptionHandler {
         return response(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
-    @ExceptionHandler({ParkingLotFullException.class, ActiveParkingAllocationExistException.class})
+    @ExceptionHandler({ParkingLotFullException.class, ActiveParkingAllocationExistException.class,
+            ParkingAllocationAlreadyStoppedException.class})
     public ResponseEntity<Map<String, String>> handleForbidden(RuntimeException exception) {
         logger.warn("Conflict: {}", exception.getMessage());
         return response(HttpStatus.CONFLICT, exception.getMessage());

@@ -50,4 +50,11 @@ public class InvoiceItem {
         this.itemPrice = itemPrice;
     }
 
+    public Invoice getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(Invoice invoiceId) {
+        this.invoice = invoiceId;
+    }
 }
