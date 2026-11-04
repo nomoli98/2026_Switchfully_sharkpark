@@ -7,4 +7,5 @@ public enum Feature {
     VIEW_ALL_MEMBERS,
     GET_DIVISION,
     GET_ALL_PARKING_LOTS,
+    CREATE_PARKING_ALLOCATION
 }

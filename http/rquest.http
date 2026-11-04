@@ -1,0 +1,9 @@
+POST localhost:8080/parking-allocations
+Content-Type: application/json
+Authorization: Basic dGhvbWFzLmNsYWVzQG1haWwuYmU6JDJiJDEwJGxaRVhQeldicVovNEl3LllyQ2YwbE9aaEltWUQ3MkZSQWpCNkkuaWo0ZWVHRUgyYmhPbzl5
+
+{
+  "memberId": 2,
+  "licensePlate": "1-LPE-245",
+  "parkingLotId": 1
+}

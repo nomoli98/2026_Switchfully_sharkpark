@@ -187,4 +187,9 @@ public class User {
         return mobileNumber;
     }
 
+
+    public boolean isValidLicensePlate(String licensePlate) {
+        return this.licensePlate != null && this.licensePlate.equals(licensePlate)
+                || membershipLevel.equals(MembershipLevel.GOLD);
+    }
 }
