@@ -1,6 +1,7 @@
 package com.application.sharkpark.mapper;
 
 import com.application.sharkpark.domain.City;
+import com.application.sharkpark.domain.Division;
 import com.application.sharkpark.domain.ParkingLot;
 import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.ParkingLotRequest;
@@ -8,7 +9,11 @@ import com.application.sharkpark.dto.response.ParkingLotResponse;
 import com.application.sharkpark.enums.ParkingLotCategory;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ParkingLotMapperTest {
 
@@ -18,6 +23,7 @@ class ParkingLotMapperTest {
 
         User user = new User();
         City city = new City();
+        Division division = new Division();
 
         ParkingLotRequest request = new ParkingLotRequest(
                 "Shark Parking",
@@ -27,16 +33,18 @@ class ParkingLotMapperTest {
                 25,
                 2.50,
                 1,
-                2
+                2,
+                3
         );
 
         ParkingLot result =
-                mapper.mapToParkingLot(request, user, city);
+                mapper.mapToParkingLot(request, user, city,division);
 
         assertEquals("Shark Parking", result.getName());
         assertEquals(100, result.getMaxCapacity());
         assertSame(user, result.getContactPerson());
         assertSame(city, result.getCity());
+        assertSame(division, result.getDivision());
     }
 
     @Test
@@ -53,6 +61,8 @@ class ParkingLotMapperTest {
         assertEquals("Shark Street", result.getAddressStreet());
         assertEquals(25, result.getAddressNumber());
         assertEquals(2.50, result.getPricePerHour());
+        assertEquals(3, result.getDivision().divisionId());
+        assertEquals("Brussels", result.getDivision().name());
     }
 
     private static ParkingLotResponse getResult() {
@@ -62,9 +72,21 @@ class ParkingLotMapperTest {
         user.setPhoneNumber("123");
         user.setMobileNumber("456");
 
+        User director = new User();
+        director.setFirstname("Yv");
+        director.setLastname("Es");
+
         City city = new City();
         city.setName("Waregem");
         city.setPostalCode(8790);
+
+        Division division = mock(Division.class);
+
+        when(division.getDivisionId()).thenReturn(3);
+        when(division.getName()).thenReturn("Brussels");
+        when(division.getOriginalName()).thenReturn("Brussels Division");
+        when(division.getDirector()).thenReturn(director);
+        when(division.getSubdivisions()).thenReturn(List.of());
 
         ParkingLot parkingLot = new ParkingLot(
                 "Shark Parking",
@@ -74,14 +96,15 @@ class ParkingLotMapperTest {
                 25,
                 2.50,
                 user,
-                city
+                city,
+                division
         );
         parkingLot.setId(1);
 
         ParkingLotMapper mapper = new ParkingLotMapper();
 
-        ParkingLotResponse result =
-                mapper.mapToParkingLotResponse(parkingLot);
-        return result;
+
+
+        return mapper.mapToParkingLotResponse(parkingLot);
     }
 }

@@ -37,7 +37,8 @@ class ParkingLotControllerTest {
                     "addressNumber": 25,
                     "pricePerHour": 2.50,
                     "userId": 1,
-                    "cityId": 2
+                    "cityId": 2,
+                    "divisionId": 3
                 }
                 """;
 
@@ -61,7 +62,8 @@ class ParkingLotControllerTest {
                 "addressNumber": 25,
                 "pricePerHour": 2.50,
                 "userId": 1,
-                "cityId": 2
+                "cityId": 2,
+                "divisionId": 3
             }
             """;
 
