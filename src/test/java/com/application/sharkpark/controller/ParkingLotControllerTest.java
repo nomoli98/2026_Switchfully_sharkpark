@@ -74,7 +74,7 @@ class ParkingLotControllerTest {
                 """;
 
         mockMvc.perform(post("/parkinglot")
-                        .header("Authorization", "test")
+                        .header("Authorization", "admin@sharkpark.be")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest());
@@ -108,7 +108,7 @@ class ParkingLotControllerTest {
     void getAllParkingLots_notAuthorized() throws Exception {
         doThrow(new UnauthorizedException())
                 .when(securityService)
-                .validateAuthorization(null, Feature.GET_ALL_PARKING_LOTS);
+                .validateAuthorization(null, Feature.GET_PARKING_LOT);
 
         mockMvc.perform(get("/parkinglot"))
                 .andExpect(status().isUnauthorized());
