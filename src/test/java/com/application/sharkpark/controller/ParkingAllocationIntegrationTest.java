@@ -1,18 +1,12 @@
 package com.application.sharkpark.controller;
 
-import com.application.sharkpark.domain.City;
-import com.application.sharkpark.domain.ParkingAllocation;
-import com.application.sharkpark.domain.ParkingLot;
-import com.application.sharkpark.domain.User;
+import com.application.sharkpark.domain.*;
 import com.application.sharkpark.dto.request.CreateParkingAllocationRequest;
 import com.application.sharkpark.dto.response.ParkingAllocationResponse;
 import com.application.sharkpark.enums.MembershipLevel;
 import com.application.sharkpark.enums.ParkingLotCategory;
 import com.application.sharkpark.enums.Role;
-import com.application.sharkpark.repository.CityRepository;
-import com.application.sharkpark.repository.ParkingAllocationRepository;
-import com.application.sharkpark.repository.ParkingLotRepository;
-import com.application.sharkpark.repository.UserRepository;
+import com.application.sharkpark.repository.*;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +27,7 @@ import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ParkingAllocationIntegrationTest {
@@ -45,6 +40,9 @@ class ParkingAllocationIntegrationTest {
     private UserRepository userRepository;
 
     @Autowired
+    private DivisionRepository divisionRepository;
+
+    @Autowired
     private ParkingLotRepository parkingLotRepository;
 
     @Autowired
@@ -52,6 +50,8 @@ class ParkingAllocationIntegrationTest {
 
     @Autowired
     private CityRepository cityRepository;
+
+
 
     private CreateParkingAllocationRequest invalidAllocationRequest;
     private User member;
@@ -288,9 +288,25 @@ class ParkingAllocationIntegrationTest {
     private ParkingLot saveParkingLot() {
         City city = cityRepository.save(getCity());
 
-        return parkingLotRepository.save(new ParkingLot("Grand Place Underground",
-                ParkingLotCategory.UNDERGROUND_BUILDING, 1, "Grasmarkt",
-                1, 4.50, member, city));
+        Division division = new Division(
+                "Test Division",
+                "Test Division",
+                null
+        );
+
+        division = divisionRepository.save(division);
+
+        return parkingLotRepository.save(new ParkingLot(
+                "Grand Place Underground",
+                ParkingLotCategory.UNDERGROUND_BUILDING,
+                1,
+                "Grasmarkt",
+                1,
+                4.50,
+                member,
+                city,
+                division
+        ));
     }
 
     private void saveParkingAllocation() {

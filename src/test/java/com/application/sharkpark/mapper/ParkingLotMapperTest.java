@@ -115,6 +115,8 @@ class ParkingLotMapperTest {
         contactPerson.setEmail("john@sharkpark.be");
         contactPerson.setMobileNumber("0470123456");
 
+        Division division = mock(Division.class);
+
         ParkingLot parkingLot = new ParkingLot(
                 "Shark Parking",
                 ParkingLotCategory.UNDERGROUND_BUILDING,
@@ -123,7 +125,9 @@ class ParkingLotMapperTest {
                 25,
                 2.50,
                 contactPerson,
-                new City()
+                new City(),
+                division
+
         );
         parkingLot.setId(1);
 

@@ -1,5 +1,6 @@
 
 package com.application.sharkpark.service;
+import java.util.List;
 import java.util.Optional;
 import com.application.sharkpark.domain.City;
 import com.application.sharkpark.domain.Division;
@@ -153,6 +154,15 @@ class ParkingLotServiceTest {
 
         when(divisionRepository.findById(3))
                 .thenReturn(Optional.empty());
+
+
+        assertThrows(
+                DivisionNotFoundException.class,
+                () -> service.createParkingLot(request)
+        );
+
+        verify(parkingLotRepository, never()).save(any());
+    }
     @Test
     void getAllParkingLots() {
         ParkingLot parkingLot1 = new ParkingLot();
@@ -192,15 +202,5 @@ class ParkingLotServiceTest {
         assertTrue(result.isEmpty());
     }
 
-
-
-
-        assertThrows(
-                DivisionNotFoundException.class,
-                () -> service.createParkingLot(request)
-        );
-
-        verify(parkingLotRepository, never()).save(any());
-    }
 
 }
