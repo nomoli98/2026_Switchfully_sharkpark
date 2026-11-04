@@ -106,9 +106,7 @@ class ParkingAllocationIntegrationTest {
         void givenExistingUserWithWrongAccess_thenThrowForbiddenException() {
             User manager = saveManager();
             given()
-                    .auth()
-                    .preemptive()
-                    .basic(manager.getEmail(), manager.getPassword())
+                    .header("Authorization", manager.getEmail())
                     .contentType(JSON)
                     .body(invalidAllocationRequest)
                     .when()
@@ -120,9 +118,7 @@ class ParkingAllocationIntegrationTest {
         @Test
         void givenNonExistingMember_thenThrowUserNotFoundException() {
             String errorMessage = given()
-                    .auth()
-                    .preemptive()
-                    .basic(member.getEmail(), member.getPassword())
+                    .header("Authorization", member.getEmail())
                     .contentType(JSON)
                     .body(invalidAllocationRequest)
                     .when()
@@ -141,9 +137,7 @@ class ParkingAllocationIntegrationTest {
             CreateParkingAllocationRequest invalidAllocationRequest =
                     new CreateParkingAllocationRequest(member.getUserId(), "124-11", 100);
             String errorMessage = given()
-                    .auth()
-                    .preemptive()
-                    .basic(member.getEmail(), member.getPassword())
+                    .header("Authorization", member.getEmail())
                     .contentType(JSON)
                     .body(invalidAllocationRequest)
                     .when()
@@ -162,9 +156,7 @@ class ParkingAllocationIntegrationTest {
                     new CreateParkingAllocationRequest(member.getUserId(), member.getLicensePlate(), parkingLot.getId());
 
             String errorMessage = given()
-                    .auth()
-                    .preemptive()
-                    .basic(member.getEmail(), member.getPassword())
+                    .header("Authorization", member.getEmail())
                     .contentType(JSON)
                     .body(invalidAllocationRequest)
                     .when()
@@ -184,9 +176,7 @@ class ParkingAllocationIntegrationTest {
                     new CreateParkingAllocationRequest(member.getUserId(), member.getLicensePlate(), 100);
 
             String errorMessage = given()
-                    .auth()
-                    .preemptive()
-                    .basic(member.getEmail(), member.getPassword())
+                    .header("Authorization", member.getEmail())
                     .contentType(JSON)
                     .body(invalidAllocationRequest)
                     .when()
@@ -209,9 +199,7 @@ class ParkingAllocationIntegrationTest {
                             parkingLot.getId());
 
             String errorMessage = given()
-                    .auth()
-                    .preemptive()
-                    .basic(member.getEmail(), member.getPassword())
+                    .header("Authorization", member.getEmail())
                     .contentType(JSON)
                     .body(invalidAllocationRequest)
                     .when()
@@ -236,9 +224,7 @@ class ParkingAllocationIntegrationTest {
                             parkingLot.getId());
 
             ParkingAllocationResponse response = given()
-                    .auth()
-                    .preemptive()
-                    .basic(member.getEmail(), member.getPassword())
+                    .header("Authorization", member.getEmail())
                     .contentType(JSON)
                     .body(allocationRequest)
                     .when()
