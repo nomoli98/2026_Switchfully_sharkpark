@@ -4,12 +4,10 @@ import com.application.sharkpark.domain.ParkingAllocation;
 import com.application.sharkpark.domain.ParkingLot;
 import com.application.sharkpark.domain.User;
 import com.application.sharkpark.dto.request.CreateParkingAllocationRequest;
+import com.application.sharkpark.dto.request.StopParkingAllocationRequest;
 import com.application.sharkpark.dto.response.ParkingAllocationResponse;
 import com.application.sharkpark.enums.ParkingAllocationStatus;
-import com.application.sharkpark.exceptions.ActiveParkingAllocationExistException;
-import com.application.sharkpark.exceptions.NotFoundException;
-import com.application.sharkpark.exceptions.RequestException;
-import com.application.sharkpark.exceptions.UserNotFoundException;
+import com.application.sharkpark.exceptions.*;
 import com.application.sharkpark.mapper.ParkingAllocationMapper;
 import com.application.sharkpark.repository.ParkingAllocationRepository;
 import com.application.sharkpark.repository.ParkingLotRepository;
@@ -29,6 +27,7 @@ import jakarta.persistence.criteria.Predicate;
 
 
 @Service
+@Transactional
 public class ParkingAllocationService {
     private static final Logger logger = LoggerFactory.getLogger(ParkingAllocationService.class);
 
@@ -44,15 +43,14 @@ public class ParkingAllocationService {
         this.parkingLotRepository = parkingLotRepository;
     }
 
-    @Transactional
     public ParkingAllocationResponse createParkingAllocation(CreateParkingAllocationRequest request) {
-        logger.info("Received POST parking allocation with memberID = {} and parkingLotID = {}",
-                    request.memberId(), request.memberId());
+        logger.info("Received CREATE parking allocation request with memberID = {} and parkingLotID = {}",
+                request.memberId(), request.parkingLotId());
 
-        User member = getMember(request.memberId());
+        User member = getMemberById(request.memberId());
         validateLicensePlate(member, request.licensePlate());
 
-        ParkingLot parkingLot = getParkingLot(request.parkingLotId());
+        ParkingLot parkingLot = getParkingLotById(request.parkingLotId());
 
         validateParkingAllocationRequest(request.licensePlate());
 
@@ -123,18 +121,43 @@ public class ParkingAllocationService {
 
 
     private User getMember(int memberId) {
+    public void stopParkingAllocation(StopParkingAllocationRequest request) {
+        logger.info("Received STOP parking allocation request with memberID = {} and parkingAllocationID = {}",
+                request.memberId(), request.parkingAllocationId());
+
+        User member = getMemberById(request.memberId());
+
+        ParkingAllocation parkingAllocation = getParkingAllocationById(request.parkingAllocationId());
+
+        validateParkingAllocationOwner(parkingAllocation.getMember().getUserId(), member.getUserId());
+
+        parkingAllocation.stopParkingAllocation();
+        parkingAllocationRepository.save(parkingAllocation);
+    }
+
+    private User getMemberById(int memberId) {
         return userRepository.findById(memberId)
                              .orElseThrow(() -> new UserNotFoundException(memberId));
+    }
+
+    private ParkingAllocation getParkingAllocationById(int parkingAllocationId) {
+        return parkingAllocationRepository.findById(parkingAllocationId)
+                .orElseThrow(() -> new NotFoundException("ParkingAllocation not found with ID = " + parkingAllocationId));
+    }
+
+    private void validateParkingAllocationOwner(int parkingAllocationId, int memberId) {
+        if (parkingAllocationId != memberId) {
+            throw new InvalidParkingAllocationOwnerException(parkingAllocationId, memberId);
+        }
     }
 
     private void validateLicensePlate(User member, String licensePlate) {
         if (!member.isValidLicensePlate((licensePlate))) {
             throw RequestException.invalidField("licensePlate");
         }
-
     }
 
-    private ParkingLot getParkingLot(int parkingLotId) {
+    private ParkingLot getParkingLotById(int parkingLotId) {
         return parkingLotRepository.findByParkingLotIdForUpdate(parkingLotId)
                                    .orElseThrow(() -> new NotFoundException(
                                            "ParkingLot not found with ID = " + parkingLotId));

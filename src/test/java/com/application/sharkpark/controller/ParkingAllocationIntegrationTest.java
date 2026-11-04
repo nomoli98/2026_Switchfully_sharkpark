@@ -2,8 +2,10 @@ package com.application.sharkpark.controller;
 
 import com.application.sharkpark.domain.*;
 import com.application.sharkpark.dto.request.CreateParkingAllocationRequest;
+import com.application.sharkpark.dto.request.StopParkingAllocationRequest;
 import com.application.sharkpark.dto.response.ParkingAllocationResponse;
 import com.application.sharkpark.enums.MembershipLevel;
+import com.application.sharkpark.enums.ParkingAllocationStatus;
 import com.application.sharkpark.enums.ParkingLotCategory;
 import com.application.sharkpark.enums.Role;
 import com.application.sharkpark.repository.*;
@@ -134,12 +136,12 @@ class ParkingAllocationIntegrationTest {
 
         @Test
         void givenMemberNotOwnerAndNotGoldMembership_thenThrowRequestException() {
-            CreateParkingAllocationRequest invalidAllocationRequest =
+            CreateParkingAllocationRequest request =
                     new CreateParkingAllocationRequest(member.getUserId(), "124-11", 100);
             String errorMessage = given()
                     .header("Authorization", member.getEmail())
                     .contentType(JSON)
-                    .body(invalidAllocationRequest)
+                    .body(request)
                     .when()
                     .post()
                     .then()
@@ -152,13 +154,13 @@ class ParkingAllocationIntegrationTest {
 
         @Test
         void givenActiveParkingAllocationWithLicensePlate_thenThrowActiveParkingAllocationExistException() {
-            CreateParkingAllocationRequest invalidAllocationRequest =
+            CreateParkingAllocationRequest request =
                     new CreateParkingAllocationRequest(member.getUserId(), member.getLicensePlate(), parkingLot.getId());
 
             String errorMessage = given()
                     .header("Authorization", member.getEmail())
                     .contentType(JSON)
-                    .body(invalidAllocationRequest)
+                    .body(request)
                     .when()
                     .post()
                     .then()
@@ -172,13 +174,13 @@ class ParkingAllocationIntegrationTest {
 
         @Test
         void givenNonExistingParkingLot_thenThrowNotFoundException() {
-            CreateParkingAllocationRequest invalidAllocationRequest =
+            CreateParkingAllocationRequest request =
                     new CreateParkingAllocationRequest(member.getUserId(), member.getLicensePlate(), 100);
 
             String errorMessage = given()
                     .header("Authorization", member.getEmail())
                     .contentType(JSON)
-                    .body(invalidAllocationRequest)
+                    .body(request)
                     .when()
                     .post()
                     .then()
@@ -187,21 +189,21 @@ class ParkingAllocationIntegrationTest {
                     .path(ERROR_PATH);
 
             assertEquals("ParkingLot not found with ID = "
-                    + invalidAllocationRequest.parkingLotId(), errorMessage);
+                    + request.parkingLotId(), errorMessage);
         }
 
         @Test
         void givenFullParkingLot_thenThrowParkingLotFullException() {
             User otherMember = saveOtherMember();
 
-            CreateParkingAllocationRequest invalidAllocationRequest =
+            CreateParkingAllocationRequest request =
                     new CreateParkingAllocationRequest(otherMember.getUserId(), otherMember.getLicensePlate(),
                             parkingLot.getId());
 
             String errorMessage = given()
                     .header("Authorization", member.getEmail())
                     .contentType(JSON)
-                    .body(invalidAllocationRequest)
+                    .body(request)
                     .when()
                     .post()
                     .then()
@@ -241,6 +243,105 @@ class ParkingAllocationIntegrationTest {
         }
     }
 
+    @Nested
+    class StopParkingAllocation {
+
+        private StopParkingAllocationRequest validStopRequest;
+        private ParkingAllocation activeAllocation;
+
+        @BeforeEach
+        void stopSetup() {
+            parkingAllocationRepository.deleteAll();
+
+            activeAllocation = new ParkingAllocation(parkingLot, member, member.getLicensePlate());
+            activeAllocation = parkingAllocationRepository.save(activeAllocation);
+
+            validStopRequest = new StopParkingAllocationRequest(
+                    activeAllocation.getParkingAllocationId(),
+                    member.getUserId()
+            );
+        }
+
+        @Test
+        void givenNoCredentials_thenThrowUnauthorizedException() {
+            given()
+                    .contentType(JSON)
+                    .body(validStopRequest)
+                    .when()
+                    .post("/stop")
+                    .then()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value());
+        }
+
+        @Test
+        void givenExistingUserWithWrongAccess_thenThrowForbiddenException() {
+            User manager = saveManager();
+            given()
+                    .header("Authorization", manager.getEmail())
+                    .contentType(JSON)
+                    .body(validStopRequest)
+                    .when()
+                    .post("/stop")
+                    .then()
+                    .statusCode(HttpStatus.FORBIDDEN.value());
+        }
+
+        @Test
+        void givenNonExistingAllocation_thenThrowNotFoundException() {
+            StopParkingAllocationRequest request = new StopParkingAllocationRequest(9999, member.getUserId());
+
+            String errorMessage = given()
+                    .header("Authorization", member.getEmail())
+                    .contentType(JSON)
+                    .body(request)
+                    .when()
+                    .post("/stop")
+                    .then()
+                    .statusCode(HttpStatus.NOT_FOUND.value())
+                    .extract()
+                    .path(ERROR_PATH);
+
+            assertEquals("ParkingAllocation not found with ID = 9999", errorMessage);
+        }
+
+        @Test
+        void givenUserIsNotTheAllocationOwner_thenThrowInvalidParkingAllocationOwnerException() {
+            User otherMember = saveOtherMember();
+            StopParkingAllocationRequest request = new StopParkingAllocationRequest(
+                    activeAllocation.getParkingAllocationId(),
+                    otherMember.getUserId()
+            );
+
+            given()
+                    .header("Authorization", member.getEmail())
+                    .contentType(JSON)
+                    .body(request)
+                    .when()
+                    .post("/stop")
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+
+        @Test
+        void givenRightData_thenParkingAllocationStoppedSuccessfully() {
+            given()
+                    .header("Authorization", member.getEmail())
+                    .contentType(JSON)
+                    .body(validStopRequest)
+                    .when()
+                    .post("/stop")
+                    .then()
+                    .statusCode(HttpStatus.OK.value());
+
+            ParkingAllocation updatedAllocation = parkingAllocationRepository
+                    .findById(activeAllocation.getParkingAllocationId())
+                    .orElseThrow();
+
+            assertEquals(ParkingAllocationStatus.STOPPED, updatedAllocation.getStatus());
+            assertThat(updatedAllocation.getStopTime()).isNotNull();
+        }
+    }
+
     private User saveManager() {
         User user = new User();
         user.setRole(Role.MANAGER);
@@ -260,7 +361,7 @@ class ParkingAllocationIntegrationTest {
     }
 
     private User saveOtherMember() {
-        User member = createMember();
+        member = createMember();
         member.setLicensePlate("AAA-BBB");
         member.setMembershipLevel(MembershipLevel.GOLD);
         member.setEmail("other@email.com");
@@ -311,7 +412,7 @@ class ParkingAllocationIntegrationTest {
     }
 
     private User createMember() {
-        User member = new User();
+        member = new User();
         member.setRole(Role.MEMBER);
         member.setFirstname("Test");
         member.setLastname("Lastname");
