@@ -120,7 +120,6 @@ public class ParkingAllocationService {
     }
 
 
-    private User getMember(int memberId) {
     public void stopParkingAllocation(StopParkingAllocationRequest request) {
         logger.info("Received STOP parking allocation request with memberID = {} and parkingAllocationID = {}",
                 request.memberId(), request.parkingAllocationId());
