@@ -21,7 +21,7 @@ public class InvoiceItem {
 
     @ManyToOne
     @JoinColumn(name = "fk_invoice_id")
-    private Invoice invoiceId;
+    private Invoice invoice;
 
     public InvoiceItem() {
     }
@@ -50,11 +50,11 @@ public class InvoiceItem {
         this.itemPrice = itemPrice;
     }
 
-    public Invoice getInvoiceId() {
-        return invoiceId;
+    public Invoice getInvoice() {
+        return invoice;
     }
 
-    public void setInvoiceId(Invoice invoiceId) {
-        this.invoiceId = invoiceId;
+    public void setInvoice(Invoice invoiceId) {
+        this.invoice = invoiceId;
     }
 }
