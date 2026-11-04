@@ -138,14 +138,14 @@ class ParkingAllocationIntegrationTest {
 
         @Test
         void givenMemberNotOwnerAndNotGoldMembership_thenThrowRequestException() {
-            CreateParkingAllocationRequest invalidAllocationRequest =
+            CreateParkingAllocationRequest request =
                     new CreateParkingAllocationRequest(member.getUserId(), "124-11", 100);
             String errorMessage = given()
                     .auth()
                     .preemptive()
                     .basic(member.getEmail(), member.getPassword())
                     .contentType(JSON)
-                    .body(invalidAllocationRequest)
+                    .body(request)
                     .when()
                     .post()
                     .then()
@@ -158,7 +158,7 @@ class ParkingAllocationIntegrationTest {
 
         @Test
         void givenActiveParkingAllocationWithLicensePlate_thenThrowActiveParkingAllocationExistException() {
-            CreateParkingAllocationRequest invalidAllocationRequest =
+            CreateParkingAllocationRequest request =
                     new CreateParkingAllocationRequest(member.getUserId(), member.getLicensePlate(), parkingLot.getId());
 
             String errorMessage = given()
@@ -166,7 +166,7 @@ class ParkingAllocationIntegrationTest {
                     .preemptive()
                     .basic(member.getEmail(), member.getPassword())
                     .contentType(JSON)
-                    .body(invalidAllocationRequest)
+                    .body(request)
                     .when()
                     .post()
                     .then()
@@ -180,7 +180,7 @@ class ParkingAllocationIntegrationTest {
 
         @Test
         void givenNonExistingParkingLot_thenThrowNotFoundException() {
-            CreateParkingAllocationRequest invalidAllocationRequest =
+            CreateParkingAllocationRequest request =
                     new CreateParkingAllocationRequest(member.getUserId(), member.getLicensePlate(), 100);
 
             String errorMessage = given()
@@ -188,7 +188,7 @@ class ParkingAllocationIntegrationTest {
                     .preemptive()
                     .basic(member.getEmail(), member.getPassword())
                     .contentType(JSON)
-                    .body(invalidAllocationRequest)
+                    .body(request)
                     .when()
                     .post()
                     .then()
@@ -197,14 +197,14 @@ class ParkingAllocationIntegrationTest {
                     .path(ERROR_PATH);
 
             assertEquals("ParkingLot not found with ID = "
-                    + invalidAllocationRequest.parkingLotId(), errorMessage);
+                    + request.parkingLotId(), errorMessage);
         }
 
         @Test
         void givenFullParkingLot_thenThrowParkingLotFullException() {
             User otherMember = saveOtherMember();
 
-            CreateParkingAllocationRequest invalidAllocationRequest =
+            CreateParkingAllocationRequest request =
                     new CreateParkingAllocationRequest(otherMember.getUserId(), otherMember.getLicensePlate(),
                             parkingLot.getId());
 
@@ -213,7 +213,7 @@ class ParkingAllocationIntegrationTest {
                     .preemptive()
                     .basic(member.getEmail(), member.getPassword())
                     .contentType(JSON)
-                    .body(invalidAllocationRequest)
+                    .body(request)
                     .when()
                     .post()
                     .then()
@@ -255,6 +255,11 @@ class ParkingAllocationIntegrationTest {
         }
     }
 
+    @Nested
+    class StopParkingAllocation {
+
+    }
+
     private User saveManager() {
         User user = new User();
         user.setRole(Role.MANAGER);
@@ -274,7 +279,7 @@ class ParkingAllocationIntegrationTest {
     }
 
     private User saveOtherMember() {
-        User member = createMember();
+        member = createMember();
         member.setLicensePlate("AAA-BBB");
         member.setMembershipLevel(MembershipLevel.GOLD);
         member.setEmail("other@email.com");
@@ -309,7 +314,7 @@ class ParkingAllocationIntegrationTest {
     }
 
     private User createMember() {
-        User member = new User();
+        member = new User();
         member.setRole(Role.MEMBER);
         member.setFirstname("Test");
         member.setLastname("Lastname");

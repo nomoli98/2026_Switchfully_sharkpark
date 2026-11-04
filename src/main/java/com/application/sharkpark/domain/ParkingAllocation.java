@@ -1,6 +1,7 @@
 package com.application.sharkpark.domain;
 
 import com.application.sharkpark.enums.ParkingAllocationStatus;
+import com.application.sharkpark.exceptions.ParkingAllocationAlreadyStoppedException;
 import jakarta.persistence.*;
 
 import java.time.Clock;
@@ -18,6 +19,9 @@ public class ParkingAllocation {
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
+
+    @Column(name = "stop_time")
+    private LocalDateTime stopTime;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -62,7 +66,11 @@ public class ParkingAllocation {
         return parkingLot;
     }
 
-    public ParkingAllocationStatus getStatus() {
-        return status;
+    public void stopParkingAllocation() {
+        if (status.equals(ParkingAllocationStatus.STOPPED) && stopTime != null) {
+            throw new ParkingAllocationAlreadyStoppedException(parkingAllocationId);
+        }
+        this.status = ParkingAllocationStatus.STOPPED;
+        this.stopTime = LocalDateTime.now(Clock.systemDefaultZone());
     }
 }

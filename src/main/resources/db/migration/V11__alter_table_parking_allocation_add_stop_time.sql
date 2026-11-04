@@ -1,0 +1,1 @@
+ALTER TABLE parking_allocations ADD COLUMN stop_time TIMESTAMP;

@@ -1,6 +1,7 @@
 package com.application.sharkpark.controller;
 
 import com.application.sharkpark.dto.request.CreateParkingAllocationRequest;
+import com.application.sharkpark.dto.request.StopParkingAllocationRequest;
 import com.application.sharkpark.dto.response.ParkingAllocationResponse;
 import com.application.sharkpark.enums.Feature;
 import com.application.sharkpark.service.ParkingAllocationService;
@@ -24,8 +25,17 @@ public class ParkingAllocationController {
     @ResponseStatus(HttpStatus.CREATED)
     public ParkingAllocationResponse createParkingAllocation(@RequestHeader(value = "Authorization", required = false)
                                                                  String authorization,
-                                                             @Valid @RequestBody CreateParkingAllocationRequest createParkingAllocationRequest) {
+                                                             @Valid @RequestBody CreateParkingAllocationRequest request) {
         securityService.validateAuthorization(authorization, Feature.CREATE_PARKING_ALLOCATION);
-        return parkingAllocationService.createParkingAllocation(createParkingAllocationRequest);
+        return parkingAllocationService.createParkingAllocation(request);
+    }
+
+    @PostMapping(consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void stopParkingAllocation(@RequestHeader(value = "Authorization", required = false)
+                                          String authorization,
+                                      @Valid @RequestBody StopParkingAllocationRequest request) {
+        securityService.validateAuthorization(authorization, Feature.STOP_PARKING_ALLOCATION);
+        parkingAllocationService.stopParkingAllocation(request);
     }
 }

@@ -22,8 +22,8 @@ public class GlobalExceptionHandler {
         return response(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<Map<String, String>> handleUnauthorized(UnauthorizedException exception) {
+    @ExceptionHandler({UnauthorizedException.class, InvalidParkingAllocationOwnerException.class})
+    public ResponseEntity<Map<String, String>> handleUnauthorized(RuntimeException exception) {
         logger.warn("Unauthorized access: {}", exception.getMessage());
         return response(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }
@@ -40,7 +40,8 @@ public class GlobalExceptionHandler {
         return response(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
-    @ExceptionHandler({ParkingLotFullException.class, ActiveParkingAllocationExistException.class})
+    @ExceptionHandler({ParkingLotFullException.class, ActiveParkingAllocationExistException.class,
+            ParkingAllocationAlreadyStoppedException.class})
     public ResponseEntity<Map<String, String>> handleForbidden(RuntimeException exception) {
         logger.warn("Conflict: {}", exception.getMessage());
         return response(HttpStatus.CONFLICT, exception.getMessage());
