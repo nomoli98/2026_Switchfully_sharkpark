@@ -15,6 +15,7 @@ public class ParkingLot {
     @Column(name = "name")
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 25)
     private ParkingLotCategory category;
 
