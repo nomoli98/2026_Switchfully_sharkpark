@@ -35,7 +35,7 @@ public class ParkingAllocationController {
     public ParkingAllocationResponse createParkingAllocation(
             @RequestHeader(value = "Authorization", required = false)
             String authorization,
-            @Valid @RequestBody CreateParkingAllocationRequest createParkingAllocationRequest) {
+            @Valid @RequestBody CreateParkingAllocationRequest request) {
         securityService.validateAuthorization(authorization, Feature.CREATE_PARKING_ALLOCATION);
         return parkingAllocationService.createParkingAllocation(request);
     }
