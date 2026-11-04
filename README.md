@@ -77,6 +77,7 @@ erDiagram
     int parking_allocation_id PK
     varchar license_plate
     timestamp start_time
+    timestamp stop_time
     varchar status
     int fk_user_id FK
     int fk_parking_lot_id FK
@@ -95,18 +96,19 @@ erDiagram
 
 ## Migrations
 
-| Version | Script                                          | What it does                                                                                                                                                                 |
-|---------|-------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| V1      | `V1__create_initial_schema.sql`                 | Creates `cities`, `users`, `divisions` and `parking_lots` with their foreign keys.                                                                                           |
-| V2      | `V2__alter_table_ParkingLots.sql`               | Adds `name` and `price_per_hour` to `parking_lots`; makes its address columns `NOT NULL`.                                                                                    |
-| V3      | `V3__seeds_for_all_tables.sql`                  | First seed data. Now fully commented out (superseded by V5).                                                                                                                 |
-| V4      | `V4__alter_table_user.sql`                      | Changes `users.registration_date` from `TIMESTAMP` to `DATE`.                                                                                                                |
-| V5      | `V5__altered_seeds.sql`                         | Seed data matching the new date format: 10 cities, 12 users (1 admin, 4 managers, 7 members), 6 divisions, 13 parking lots. All seeded users share the same bcrypt password. |
-| V6      | `V6__alter_table_divisions_add_subdivision.sql` | Add subdivision_id foreign key.                                                                                                                                              |                                                                                                                                                              |
-| V7      | `V7__alter_table_user_membership.sql`           | Adds `users.membership` (default `BRONZE`) with a check constraint allowing `BRONZE`, `SILVER`, `GOLD`.                                                                      |
-| V8      | `V8__create_table_parking_allocation.sql`       | Creates `parking_allocations` with foreign keys to `users` and `parking_lots`.                                                                                               |
-| V9      | Coming soon                                     | Not added yet.                                                                                                                                                               |
+| Version | Script                                                   | What it does                                                                                                                                                                 |
+|---------|----------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| V1      | `V1__create_initial_schema.sql`                          | Creates `cities`, `users`, `divisions` and `parking_lots` with their foreign keys.                                                                                           |
+| V2      | `V2__alter_table_ParkingLots.sql`                        | Adds `name` and `price_per_hour` to `parking_lots`; makes its address columns `NOT NULL`.                                                                                    |
+| V3      | `V3__seeds_for_all_tables.sql`                           | First seed data. Now fully commented out (superseded by V5).                                                                                                                 |
+| V4      | `V4__alter_table_user.sql`                               | Changes `users.registration_date` from `TIMESTAMP` to `DATE`.                                                                                                                |
+| V5      | `V5__altered_seeds.sql`                                  | Seed data matching the new date format: 10 cities, 12 users (1 admin, 4 managers, 7 members), 6 divisions, 13 parking lots. All seeded users share the same bcrypt password. |
+| V6      | `V6__alter_table_divisions_add_subdivision.sql`          | Add subdivision_id foreign key.                                                                                                                                              |                                                                                                                                                              |
+| V7      | `V7__alter_table_user_membership.sql`                    | Adds `users.membership` (default `BRONZE`) with a check constraint allowing `BRONZE`, `SILVER`, `GOLD`.                                                                      |
+| V8      | `V8__create_table_parking_allocation.sql`                | Creates `parking_allocations` with foreign keys to `users` and `parking_lots`.                                                                                               |
+| V9      | `V9__add_division_to_parking_lots.sql`                   | Adds `parking_lots.fk_division_id` with foreigh key to `divisions`.                                                                                                          |
 | V10     | `V10__alter_table_parking_lot_add_current_occupancy.sql` | Adds `parking_lots.current_occupancy` (default `0`) with a check constraint keeping it between `0` and `max_capacity`.                                                       |
+| V11     | `V11__alter_table_parking_allocation_add_stop_time.sql`  | Adds `parking_lots.stop_time`.                                                                                                                                               |
 
 ## Working with Flyway
 
