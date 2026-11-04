@@ -28,7 +28,7 @@ public class Invoice {
     @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
 
-    @Column(name = "closed_at")
+    @Column(name = "payment_at")
     private LocalDateTime closed_at;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -95,4 +95,9 @@ public class Invoice {
     public void setItems(List<InvoiceItem> items) {
         this.items = items;
     }
+
+    public LocalDateTime getClosed_at() {
+        return closed_at;
+    }
+
 }
