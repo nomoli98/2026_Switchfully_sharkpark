@@ -30,7 +30,7 @@ public class ParkingAllocationController {
         return parkingAllocationService.createParkingAllocation(request);
     }
 
-    @PostMapping(consumes = "application/json")
+    @PostMapping(path = "stop", consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public void stopParkingAllocation(@RequestHeader(value = "Authorization", required = false)
                                           String authorization,

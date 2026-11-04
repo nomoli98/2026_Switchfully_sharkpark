@@ -16,14 +16,14 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(RequestException.class)
-    public ResponseEntity<Map<String, String>> handleRequestException(RequestException exception) {
+    @ExceptionHandler({RequestException.class, InvalidParkingAllocationOwnerException.class})
+    public ResponseEntity<Map<String, String>> handleRequestException(RuntimeException exception) {
         logBadRequest(exception.getMessage());
         return response(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
-    @ExceptionHandler({UnauthorizedException.class, InvalidParkingAllocationOwnerException.class})
-    public ResponseEntity<Map<String, String>> handleUnauthorized(RuntimeException exception) {
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Map<String, String>> handleUnauthorized(UnauthorizedException exception) {
         logger.warn("Unauthorized access: {}", exception.getMessage());
         return response(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }

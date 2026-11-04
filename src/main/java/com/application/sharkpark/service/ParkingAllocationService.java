@@ -82,7 +82,7 @@ public class ParkingAllocationService {
     }
 
     private void validateParkingAllocationOwner(int parkingAllocationId, int memberId) {
-        if (parkingAllocationId == memberId) {
+        if (parkingAllocationId != memberId) {
             throw new InvalidParkingAllocationOwnerException(parkingAllocationId, memberId);
         }
     }

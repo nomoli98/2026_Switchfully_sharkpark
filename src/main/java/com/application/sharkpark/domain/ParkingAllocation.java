@@ -66,6 +66,14 @@ public class ParkingAllocation {
         return parkingLot;
     }
 
+    public ParkingAllocationStatus getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getStopTime() {
+        return stopTime;
+    }
+
     public void stopParkingAllocation() {
         if (status.equals(ParkingAllocationStatus.STOPPED) && stopTime != null) {
             throw new ParkingAllocationAlreadyStoppedException(parkingAllocationId);
