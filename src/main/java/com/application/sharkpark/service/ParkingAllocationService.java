@@ -97,6 +97,14 @@ public class ParkingAllocationService {
         Specification<ParkingAllocation> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            if (memberUserId != null) {
+                predicates.add(cb.equal(root.get("member").get("userId"), memberUserId));
+            }
+
+            if (parkingLotId != null) {
+                predicates.add(cb.equal(root.get("parkingLot").get("id"), parkingLotId));
+            }
+
             if (status != null) {
                 predicates.add(cb.equal(root.get("status"), status));
             }
