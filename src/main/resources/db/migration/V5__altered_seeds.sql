@@ -59,7 +59,7 @@ VALUES ('ParkShark Brussels', 'Brussels Parking Group', 1),
        ('ParkShark Ghent', 'Gentse Parkeerbedrijf', 3),
        ('ParkShark Wallonia', 'Parkings de Wallonie', 4),
        ('ParkShark Leuven', 'Leuvense Parkings', 5),
-       ('ParkShark Coast', 'Kust Parking NV', NULL);
+       ('ParkShark Coast', 'Kust Parking NV', 6);
 
 INSERT INTO parking_lots (name, category, max_capacity, fk_contact_person_id,
                           address_street, address_number, fk_city_id, price_per_hour)
