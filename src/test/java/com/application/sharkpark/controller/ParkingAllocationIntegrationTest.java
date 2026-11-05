@@ -339,6 +339,7 @@ class ParkingAllocationIntegrationTest {
 
             assertEquals(ParkingAllocationStatus.STOPPED, updatedAllocation.getStatus());
             assertThat(updatedAllocation.getStopTime()).isNotNull();
+            assertThat(updatedAllocation.getParkingLot().getCurrentOccupancy()).isZero();
         }
     }
 
