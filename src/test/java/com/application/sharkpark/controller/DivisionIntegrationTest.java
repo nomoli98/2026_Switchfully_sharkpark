@@ -209,15 +209,14 @@ class DivisionIntegrationTest {
     @Test
     void getDivisionById_givenExistingDivision() {
         User manager = saveManager();
-        saveDivision(manager);
+        Division division = saveDivision(manager);
 
-        int divisionId = divisionRepository.findAll().get(0).getDivisionId();
 
         DivisionResponse response = given()
                 .header("Authorization", manager.getEmail())
                 .contentType(ContentType.JSON)
                 .when()
-                .get(BASE_PATH + "/" + divisionId)
+                .get(BASE_PATH + "/" + division.getDivisionId())
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
@@ -273,8 +272,8 @@ class DivisionIntegrationTest {
         return userRepository.save(user);
     }
 
-    private void saveDivision(User director) {
-        divisionRepository.save(new Division("name", "originalName", director));
+    private Division saveDivision(User director) {
+        return divisionRepository.save(new Division("name", "originalName", director));
     }
 
 

@@ -8,11 +8,8 @@ import com.application.sharkpark.domain.ParkingLot;
 import com.application.sharkpark.dto.request.ParkingLotRequest;
 import com.application.sharkpark.dto.response.ParkingLotOverviewResponse;
 import com.application.sharkpark.dto.response.ParkingLotResponse;
-import com.application.sharkpark.repository.CityRepository;
-import com.application.sharkpark.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 
 @Component
 public class ParkingLotMapper {
@@ -45,6 +42,7 @@ public class ParkingLotMapper {
                 parkingLot.getAddressStreet(),
                 parkingLot.getAddressNumber(),
                 parkingLot.getPricePerHour(),
+                parkingLot.getCurrentOccupancy(),
 
                 UserMapper.toUserResponse(parkingLot.getContactPerson()),
 
