@@ -10,9 +10,11 @@ public enum Role {
                     Feature.VIEW_ALL_MEMBERS,
                     Feature.GET_DIVISION,
                     Feature.GET_PARKING_LOT,
-                    Feature.GET_PARKING_ALLOCATION,
-                    Feature.STOP_PARKING_ALLOCATION)),
-    MEMBER(List.of(Feature.CREATE_MEMBER, Feature.GET_INVOICE));
+                    Feature.GET_PARKING_ALLOCATION)),
+    MEMBER(List.of(Feature.CREATE_MEMBER,
+            Feature.GET_INVOICE,
+            Feature.CREATE_PARKING_ALLOCATION,
+            Feature.STOP_PARKING_ALLOCATION));
 
     private final List<Feature> features;
 

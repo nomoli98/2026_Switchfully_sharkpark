@@ -78,6 +78,7 @@ public class ParkingAllocation {
         if (status.equals(ParkingAllocationStatus.STOPPED) && stopTime != null) {
             throw new ParkingAllocationAlreadyStoppedException(parkingAllocationId);
         }
+        this.parkingLot.decrementOccupancy();
         this.status = ParkingAllocationStatus.STOPPED;
         this.stopTime = LocalDateTime.now(Clock.systemDefaultZone());
     }
