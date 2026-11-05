@@ -121,6 +121,10 @@ public class ParkingLot {
         currentOccupancy++;
     }
 
+    public void decrementOccupancy() {
+        currentOccupancy--;
+    }
+
     public ParkingAllocation allocateSpot(User member, String licensePlate) {
         if (isFull()) {
             throw new ParkingLotFullException(parkingLotId);
@@ -135,5 +139,9 @@ public class ParkingLot {
 
     public Division getDivision() {
         return division;
+    }
+
+    public int getCurrentOccupancy() {
+        return currentOccupancy;
     }
 }
